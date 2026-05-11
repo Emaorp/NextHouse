@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="NextHouse.Application/NextHouse.Application.csproj" />
+    <Project Path="NextHouse.Domain/NextHouse.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infraestructure/">
+    <Project Path="NextHouse.Persistence/NextHouse.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/Presenters/">
+    <Project Path="NextHouse.Web/NextHouse.Web.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="NextHouse.Tests/NextHouse.Tests.csproj" />
+  </Folder>
+</Solution>
