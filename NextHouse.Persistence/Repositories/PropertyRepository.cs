@@ -1,10 +1,11 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Domain.Entities.Property;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NextHouse.Persistence.Repositories
 {
@@ -20,6 +21,7 @@ namespace NextHouse.Persistence.Repositories
         public async Task AddAsync(Property property)
         {
             await _context.Properties.AddAsync(property);
+            await _context.SaveChangesAsync(); // Guarda en la BD
         }
 
         public async Task<IEnumerable<Property>> GetAllAsync()
@@ -33,22 +35,22 @@ namespace NextHouse.Persistence.Repositories
         public async Task<Property?> GetByIdAsync(Guid id)
         {
             return await _context.Properties
+                .Include(x => x.City)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task UpdateAsync(Property property)
         {
             _context.Properties.Update(property);
-
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync(); // Guarda en la BD
         }
 
         public async Task DeleteAsync(Property property)
         {
             _context.Properties.Remove(property);
-
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync(); // Guarda en la BD
         }
+
         public async Task<IEnumerable<Property>> GetAllByCityAsync(Guid cityId)
         {
             return await _context.Properties
@@ -57,6 +59,5 @@ namespace NextHouse.Persistence.Repositories
                 .Where(x => x.CityId == cityId)
                 .ToListAsync();
         }
-
     }
 }

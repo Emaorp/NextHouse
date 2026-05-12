@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NextHouse.Application.UseCases.Property.GetProperty
+namespace NextHouse.Application.UseCases.Property.Queries.GetProperty
 {
     public class PropertyResponseDto
     {

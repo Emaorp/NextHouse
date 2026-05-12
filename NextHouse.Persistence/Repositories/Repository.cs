@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks; // Asegúrate de tener este using
+
 namespace NextHouse.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
@@ -14,16 +16,19 @@ namespace NextHouse.Persistence.Repositories
             _context = context;
         }
 
-        public Task<T> CreateAsync(T entity)
+        // REEMPLAZADO: Ahora es async y tiene SaveChanges
+        public async Task<T> CreateAsync(T entity)
         {
-            _context.Add(entity);
-            return Task.FromResult(entity);
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task DeleteAsync(T entity)
+        // REEMPLAZADO: Ahora es async y tiene SaveChanges
+        public async Task DeleteAsync(T entity)
         {
-            _context.Remove(entity);
-            return Task.FromResult(entity);
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<T?> GetByIdAsync(Guid id)
@@ -36,10 +41,11 @@ namespace NextHouse.Persistence.Repositories
             return await _context.Set<T>().ToListAsync();
         }
 
-        public Task UpdateAsync(T entity)
+        // REEMPLAZADO: Ahora es async y tiene SaveChanges
+        public async Task UpdateAsync(T entity)
         {
-            _context.Update(entity);
-            return Task.FromResult(entity);
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }
