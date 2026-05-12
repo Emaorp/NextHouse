@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NextHouse.Application.UseCases.PropertyRequest.Update
+namespace NextHouse.Application.UseCases.PropertyRequest.Commands.Update
 {
     public class UpdatePropertyRequestDto
     {

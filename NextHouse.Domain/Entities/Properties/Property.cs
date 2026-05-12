@@ -44,11 +44,9 @@ namespace NextHouse.Domain.Entities.Properties
         public City City { get; set; } = null!;
 
         public string OwnerId { get; set; }
-        public User Owner { get; set; } = null!;
 
         // Agente asignado opcional
         public string? AgentId { get; set; }
-        public User? Agent { get; set; }
 
         // Relaciones
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();

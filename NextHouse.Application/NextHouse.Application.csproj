@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="UseCases\Account\Queries\UserHasPermission\" />
+    <Folder Include="UseCases\PropertyRequest\Commands\DeleteRequest\" />
   </ItemGroup>
 
   <ItemGroup>

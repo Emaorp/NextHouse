@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NextHouse.Persistence;
 
@@ -11,9 +12,11 @@ using NextHouse.Persistence;
 namespace NextHouse.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260512190422_updaterequest")]
+    partial class updaterequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,6 +154,41 @@ namespace NextHouse.Persistence.Migrations
                     b.ToTable("RolePermissions");
                 });
 
+            modelBuilder.Entity("NextHouse.Domain.Entities.Account.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FisrtName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("NextHouse.Domain.Entities.Location.City", b =>
                 {
                     b.Property<Guid>("Id")
@@ -200,7 +238,7 @@ namespace NextHouse.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AgentId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Area")
                         .HasColumnType("float");
@@ -230,7 +268,7 @@ namespace NextHouse.Persistence.Migrations
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -251,7 +289,11 @@ namespace NextHouse.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgentId");
+
                     b.HasIndex("CityId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Properties", (string)null);
                 });
@@ -312,12 +354,18 @@ namespace NextHouse.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("PropertyRequests", (string)null);
                 });
@@ -461,13 +509,27 @@ namespace NextHouse.Persistence.Migrations
 
             modelBuilder.Entity("NextHouse.Domain.Entities.Properties.Property", b =>
                 {
+                    b.HasOne("NextHouse.Domain.Entities.Account.User", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId");
+
                     b.HasOne("NextHouse.Domain.Entities.Location.City", "City")
                         .WithMany("Properties")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NextHouse.Domain.Entities.Account.User", "Owner")
+                        .WithMany("OwnedProperties")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
+
                     b.Navigation("City");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("NextHouse.Domain.Entities.Properties.PropertyImage", b =>
@@ -489,7 +551,15 @@ namespace NextHouse.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NextHouse.Domain.Entities.Account.User", "Tenant")
+                        .WithMany("Requests")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Property");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("NextHouse.Persistence.Entities.ApplicationUser", b =>
@@ -511,6 +581,13 @@ namespace NextHouse.Persistence.Migrations
             modelBuilder.Entity("NextHouse.Domain.Entities.Account.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("NextHouse.Domain.Entities.Account.User", b =>
+                {
+                    b.Navigation("OwnedProperties");
+
+                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("NextHouse.Domain.Entities.Location.City", b =>

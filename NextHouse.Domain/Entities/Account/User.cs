@@ -21,8 +21,6 @@ namespace NextHouse.Domain.Entities.Account
 
         public ICollection<Property> OwnedProperties { get; set; } = new List<Property>();
 
-        public ICollection<PropertyRequest> Requests { get; set; } = new List<PropertyRequest>();
-
         private User()
         {
         }
@@ -49,7 +47,8 @@ namespace NextHouse.Domain.Entities.Account
                 UserName = userName,
                 Email = email,
                 EmailConfirmed = emailConfirmed,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                RoleId = roleId
             };
         }
 
