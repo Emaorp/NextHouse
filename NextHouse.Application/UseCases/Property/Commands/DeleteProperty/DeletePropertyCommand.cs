@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using NextHouse.Application.Utilites.Mediator;
 using System;
 
-namespace NextHouse.Application.UseCases.Property.DeleteProperty
+namespace NextHouse.Application.UseCases.Property.Commands.DeleteProperty
 {
     public class DeletePropertyCommand : IRequest<bool>
     {

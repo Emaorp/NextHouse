@@ -1,12 +1,12 @@
-﻿using MediatR;
-using NextHouse.Application.Contracts.Repositories;
+﻿using NextHouse.Application.Contracts.Repositories;
+using NextHouse.Application.Utilites.Mediator;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NextHouse.Application.UseCases.Property.DeleteProperty
+namespace NextHouse.Application.UseCases.Property.Commands.DeleteProperty
 {
-    public class DeletePropertyCommandHandler : global::MediatR.IRequestHandler<DeletePropertyCommand, bool>
+    public class DeletePropertyCommandHandler : IRequestHandler<DeletePropertyCommand, bool>
     {
         private readonly IPropertyRepository _propertyRepository;
 
@@ -15,7 +15,7 @@ namespace NextHouse.Application.UseCases.Property.DeleteProperty
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<bool> Handle(DeletePropertyCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeletePropertyCommand request)
         {
           
             var property = await _propertyRepository.GetByIdAsync(request.Id);

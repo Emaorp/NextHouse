@@ -1,10 +1,9 @@
-﻿using MediatR;
-using NextHouse.Application.Utilites.Mediator;
+﻿using NextHouse.Application.Utilites.Mediator;
 using System;
 
-namespace NextHouse.Application.UseCases.Property.CreateProperty
+namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 {
-    public class CreatePropertyCommand : MediatR.IRequest<Guid>
+    public class CreatePropertyCommand : IRequest<Guid>
     {
         public CreatePropertyDto PropertyDto { get; set; }
 

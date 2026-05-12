@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using NextHouse.Application.UseCases.Property.CreateProperty;
-using NextHouse.Application.UseCases.Property.DeleteProperty;
-using NextHouse.Application.UseCases.Property.UpdateProperty;
+using NextHouse.Application.UseCases.Property.Commands.CreateProperty;
+using NextHouse.Application.UseCases.Property.Commands.UpdateProperty;
+using NextHouse.Application.UseCases.Property.Commands.DeleteProperty;
+using NextHouse.Application.Utilites.Mediator;
 using System;
 using System.Threading.Tasks;
 

@@ -1,26 +1,25 @@
-﻿using MediatR;
-using NextHouse.Application.Contracts.Repositories;
+﻿using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.Utilites.Mediator;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NextHouse.Application.UseCases.Property.CreateProperty
+namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 {
-    public class CreatePropertyCommandHandler : global::MediatR.IRequestHandler<CreatePropertyCommand, Guid>
+    public class CreatePropertyCommandUseCase : IRequestHandler<CreatePropertyCommand, Guid>
     {
         private readonly IPropertyRepository _propertyRepository;
 
-        public CreatePropertyCommandHandler(IPropertyRepository propertyRepository)
+        public CreatePropertyCommandUseCase(IPropertyRepository propertyRepository)
         {
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<Guid> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreatePropertyCommand request)
         {
             var dto = request.PropertyDto;
 
-            var newProperty = new NextHouse.Domain.Entities.Property.Property
+            var newProperty = new Domain.Entities.Property.Property
             {
                 Id = Guid.NewGuid(),
                 Title = dto.Title,
@@ -34,12 +33,13 @@ namespace NextHouse.Application.UseCases.Property.CreateProperty
                 CityId = dto.CityId,
                 Type = dto.Type,
                 CreatedAt = DateTime.Now,
-                OwnerId = "00000000-0000-0000-0000-000000000000"
+                OwnerId = "246A3F84-4376-441C-B410-15F647ABDA4E"
             };
 
             await _propertyRepository.AddAsync(newProperty);
 
             return newProperty.Id;
         }
+
     }
 }

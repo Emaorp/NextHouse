@@ -1,12 +1,12 @@
-﻿using MediatR;
-using NextHouse.Application.Contracts.Repositories;
+﻿using NextHouse.Application.Contracts.Repositories;
+using NextHouse.Application.Utilites.Mediator;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NextHouse.Application.UseCases.Property.UpdateProperty
+namespace NextHouse.Application.UseCases.Property.Commands.UpdateProperty
 {
-    public class UpdatePropertyCommandHandler : global::MediatR.IRequestHandler<UpdatePropertyCommand, bool>
+    public class UpdatePropertyCommandHandler : IRequestHandler<UpdatePropertyCommand, bool>
     {
         private readonly IPropertyRepository _propertyRepository;
 
@@ -15,7 +15,7 @@ namespace NextHouse.Application.UseCases.Property.UpdateProperty
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<bool> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdatePropertyCommand request)
         {
             
             var property = await _propertyRepository.GetByIdAsync(request.Id);
