@@ -1,4 +1,5 @@
-﻿using NextHouse.Domain.Entities.Property;
+﻿using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
+using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,5 +19,9 @@ namespace NextHouse.Application.Contracts.Repositories
         Task DeleteAsync(Property property);
 
         Task<IEnumerable<Property>> GetAllByCityAsync(Guid cityId);
+
+        Task<IEnumerable<Property>> GetByFiltersAsync(GetPropertiesByFiltersQuery filters);
+
     }
+
 }

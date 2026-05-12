@@ -4,7 +4,7 @@ namespace NextHouse.Domain.Entities.Location
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using NextHouse.Domain.Entities.Property;
+    using NextHouse.Domain.Entities.Properties;
     public class City
     {
         public Guid Id { get; set; }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NextHouse.Domain.Entities.Property
+namespace NextHouse.Domain.Entities.Properties
 {
     public class Property
     {

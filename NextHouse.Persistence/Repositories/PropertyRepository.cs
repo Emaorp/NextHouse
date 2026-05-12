@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NextHouse.Application.Contracts.Repositories;
-using NextHouse.Domain.Entities.Property;
+using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
+using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,7 @@ namespace NextHouse.Persistence.Repositories
         {
             return await _context.Properties
                 .Include(x => x.City)
+                .ThenInclude(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -59,5 +61,59 @@ namespace NextHouse.Persistence.Repositories
                 .Where(x => x.CityId == cityId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Property>> GetByFiltersAsync(
+    GetPropertiesByFiltersQuery filters)
+        {
+            var query = _context.Properties
+                .Include(x => x.City)
+                .ThenInclude(x => x.Department)
+                .Include(x => x.Images)
+                .AsQueryable();
+
+            query = query.Where(x =>
+                x.Status == PropertyStatus.Available);
+
+            if (filters.CityId.HasValue)
+            {
+                query = query.Where(x =>
+                    x.CityId == filters.CityId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.PropertyType))
+            {
+                query = query.Where(x =>
+             x.Type.ToString().ToLower() ==
+             filters.PropertyType.ToLower());
+            }
+
+            // PRICE RANGE
+            if (filters.MinPrice.HasValue &&
+                filters.MaxPrice.HasValue)
+            {
+                query = query.Where(x =>
+                    x.Price >= (decimal)filters.MinPrice.Value &&
+                    x.Price <= (decimal)filters.MaxPrice.Value);
+            }
+
+            if (filters.Bedrooms.HasValue)
+            {
+                query = query.Where(x =>
+                    x.Bedrooms == filters.Bedrooms.Value);
+            }
+
+            if (filters.Bathrooms.HasValue)
+            {
+                query = query.Where(x =>
+                    x.Bathrooms == filters.Bathrooms.Value);
+            }
+
+            return await query
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+
+
     }
 }

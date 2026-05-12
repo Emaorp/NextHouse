@@ -1,8 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using NextHouse.Application.UseCases.Property.Commands.CreateProperty;
-using NextHouse.Application.UseCases.Property.Commands.UpdateProperty;
 using NextHouse.Application.UseCases.Property.Commands.DeleteProperty;
+using NextHouse.Application.UseCases.Property.Commands.UpdateProperty;
+using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
+using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID;
 using NextHouse.Application.Utilites.Mediator;
 using System;
 using System.Threading.Tasks;
@@ -47,5 +49,29 @@ namespace NextHouse.Web.Controllers
             var result = await _mediator.Send(command);
             return result ? Ok() : NotFound();
         }
+
+        [HttpPost("filters")]
+        public async Task<IActionResult> GetByFilters(
+      [FromBody] GetPropertiesByFiltersQuery query)
+        {
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var query = new GetPropertyByIdQuery
+            {
+                Id = id
+            };
+
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+
     }
 }

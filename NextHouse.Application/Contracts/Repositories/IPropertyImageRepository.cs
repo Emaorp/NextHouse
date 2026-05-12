@@ -1,4 +1,4 @@
-﻿using NextHouse.Domain.Entities.Property;
+﻿using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -19,7 +19,7 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
         {
             var dto = request.PropertyDto;
 
-            var newProperty = new Domain.Entities.Property.Property
+            var newProperty = new Domain.Entities.Properties.Property
             {
                 Id = Guid.NewGuid(),
                 Title = dto.Title,

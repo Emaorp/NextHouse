@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NextHouse.Application.UseCases.Property.Queries.GetProperty
+namespace NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters
 {
-    public class PropertyResponseDto
+    public class PropertyFilterResponseDTO
     {
         public Guid Id { get; set; }
 
@@ -18,5 +18,6 @@ namespace NextHouse.Application.UseCases.Property.Queries.GetProperty
         public string Department { get; set; } = string.Empty;
 
         public PropertyStatus Status { get; set; }
+
     }
 }

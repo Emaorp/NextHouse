@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NextHouse.Domain.Entities.Property;
+using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Text;

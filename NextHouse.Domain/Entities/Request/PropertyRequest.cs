@@ -5,7 +5,7 @@ namespace NextHouse.Domain.Entities.Request
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using NextHouse.Domain.Entities.Property;
+    using NextHouse.Domain.Entities.Properties;
     public class PropertyRequest
     {
         public Guid Id { get; set; }

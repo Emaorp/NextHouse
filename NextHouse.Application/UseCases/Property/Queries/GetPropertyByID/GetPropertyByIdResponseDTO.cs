@@ -1,12 +1,16 @@
-﻿using NextHouse.Domain.Entities.Properties;
+﻿using NextHouse.Domain.Entities.Account;
+using NextHouse.Domain.Entities.Location;
+using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
+namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
 {
-    public class CreatePropertyDto
+    public class GetPropertyByIdResponseDTO
     {
+        public Guid Id { get; set; }
+
         public string Title { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
@@ -23,8 +27,12 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 
         public string Neighborhood { get; set; } = string.Empty;
 
-        public Guid CityId { get; set; }
+        public string Departament { get; set; } = string.Empty;
 
-        public PropertyType Type { get; set; }
+        public int Type { get; set; }
+
+        public string City { get; set; } = null!; 
+
+
     }
 }
