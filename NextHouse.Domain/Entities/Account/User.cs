@@ -3,7 +3,7 @@
 namespace NextHouse.Domain.Entities.Account
 {
     using NextHouse.Domain.Entities.Request;
-    using NextHouse.Domain.Entities.Property;
+    using NextHouse.Domain.Entities.Properties;
     using NextHouse.Domain.Exceptions;
     using System;
     using System.Collections.Generic;

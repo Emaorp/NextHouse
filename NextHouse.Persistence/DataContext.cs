@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NextHouse.Domain.Entities.Account;
 using NextHouse.Domain.Entities.Location;
-using NextHouse.Domain.Entities.Property;
+using NextHouse.Domain.Entities.Properties;
 using NextHouse.Domain.Entities.Request;
 using NextHouse.Persistence.Entities;
 using System;
