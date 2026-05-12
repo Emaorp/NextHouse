@@ -1,7 +1,7 @@
 ﻿using NextHouse.Domain.Entities.Property;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace NextHouse.Application.Contracts.Repositories
 {
