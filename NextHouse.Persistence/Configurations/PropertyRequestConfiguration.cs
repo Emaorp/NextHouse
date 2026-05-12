@@ -28,10 +28,6 @@ namespace NextHouse.Persistence.Configurations
                 .HasForeignKey(x => x.PropertyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(x => x.Tenant)
-                .WithMany(x => x.Requests)
-                .HasForeignKey(x => x.TenantId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

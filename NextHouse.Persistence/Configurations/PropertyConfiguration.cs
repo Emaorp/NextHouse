@@ -27,10 +27,6 @@ namespace NextHouse.Persistence.Configurations
                 .WithMany(x => x.Properties)
                 .HasForeignKey(x => x.CityId);
 
-            builder.HasOne(x => x.Owner)
-                .WithMany(x => x.OwnedProperties)
-                .HasForeignKey(x => x.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

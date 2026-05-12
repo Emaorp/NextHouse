@@ -11,18 +11,17 @@ namespace NextHouse.Application.Contracts.Repositories
 
         Task<IEnumerable<PropertyRequest>> GetAllAsync();
 
-        Task<IEnumerable<PropertyRequest>> GetByTenantIdAsync(Guid tenantId);
-
-        Task<IEnumerable<PropertyRequest>> GetByPropertyIdAsync(Guid propertyId);
+        Task<IEnumerable<PropertyRequest>> GetByPropertyIdAsync(
+            Guid propertyId);
 
         Task AddAsync(PropertyRequest request);
 
-        Task UpdateAsync(PropertyRequest request);
+        void Update(PropertyRequest request);
 
-        Task DeleteAsync(PropertyRequest request);
+        void Delete(PropertyRequest request);
 
         Task<bool> ExistsAsync(Guid id);
 
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
     }
 }

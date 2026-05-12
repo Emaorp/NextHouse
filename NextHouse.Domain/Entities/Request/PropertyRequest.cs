@@ -14,9 +14,11 @@ namespace NextHouse.Domain.Entities.Request
 
         public Property Property { get; set; } = null!;
 
-        public string TenantId { get; set; }
+        public string ApplicationsName { get; set; }
 
-        public User Tenant { get; set; } = null!;
+        public string PhoneNumber { get; set; }
+        
+        public string Email { get; set; }
 
         public RequestStatus Status { get; set; }
 
