@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using NextHouse.Application;
 using NextHouse.Persistence;
 // Requiere instalar el paquete NuGet "Swashbuckle.AspNetCore"
@@ -8,6 +10,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 10;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
 
 // --- 1. AGREGADO: Configuración de Swagger ---
 builder.Services.AddEndpointsApiExplorer();
@@ -44,5 +53,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.UseNotyf();
 
 app.Run();

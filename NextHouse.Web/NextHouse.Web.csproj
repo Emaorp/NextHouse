@@ -8,10 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Account\" />
     <Folder Include="DTOs\Agents\" />
     <Folder Include="DTOs\Properties\" />
-    <Folder Include="Views\Account\" />
     <Folder Include="Views\Properties\" />
   </ItemGroup>
 
