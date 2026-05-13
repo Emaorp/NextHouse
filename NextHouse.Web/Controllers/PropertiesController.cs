@@ -1,11 +1,13 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.Property.Commands.CreateProperty;
 using NextHouse.Application.UseCases.Property.Commands.DeleteProperty;
 using NextHouse.Application.UseCases.Property.Commands.UpdateProperty;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID;
 using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Web.Security;
 using System;
 using System.Threading.Tasks;
 
@@ -24,6 +26,8 @@ namespace NextHouse.Web.Controllers
 
         // POST: api/Property
         [HttpPost]
+        [RequirePermission(PermissionCodesCatalog.CREATE_PROPERTIES)]
+
         public async Task<IActionResult> Create([FromBody] CreatePropertyDto dto)
         {
             var command = new CreatePropertyCommand(dto);
@@ -33,6 +37,7 @@ namespace NextHouse.Web.Controllers
 
         // PUT: api/Property/{id}
         [HttpPut("{id}")]
+        [RequirePermission(PermissionCodesCatalog.EDIT_PROPERTIES)]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePropertyCommand command)
         {
             if (id != command.Id) return BadRequest("El ID no coincide");
@@ -43,6 +48,7 @@ namespace NextHouse.Web.Controllers
 
         // DELETE: api/Property/{id}
         [HttpDelete("{id}")]
+        [RequirePermission(PermissionCodesCatalog.DELETE_PROPERTIES)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var command = new DeletePropertyCommand(id);

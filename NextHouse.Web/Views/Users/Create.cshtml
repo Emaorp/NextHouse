@@ -1,0 +1,355 @@
+﻿@using NextHouse.Web.DTOs.Users
+@model CreateUserDTO
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+    body {
+        background-color: #eef5fb;
+        font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .register-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+        position: relative;
+    }
+
+    .background-text {
+        position: absolute;
+        top: 40px;
+        right: 80px;
+        font-size: 140px;
+        font-weight: 700;
+        color: rgba(255,255,255,.5);
+        z-index: 0;
+        user-select: none;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 560px;
+        background: white;
+        border-radius: 24px;
+        padding: 45px;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 15px 40px rgba(0,0,0,.08);
+    }
+
+    .register-title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #0f172a;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .register-subtitle {
+        text-align: center;
+        color: #64748b;
+        margin-bottom: 35px;
+    }
+
+    .role-container {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .role-option {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .role-option input {
+        display: none;
+    }
+
+    .role-label {
+        width: 100%;
+        height: 55px;
+        border-radius: 14px;
+        border: 1px solid #dbe2ea;
+        background: white;
+        color: #334155;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: .3s ease;
+    }
+
+    .role-option input:checked + .role-label {
+        background-color: #0d5c86;
+        color: white;
+        border-color: #0d5c86;
+    }
+
+    .form-control,
+    .form-select {
+        height: 58px;
+        border-radius: 14px;
+        border: 1px solid #dbe2ea;
+        padding-left: 18px;
+        margin-bottom: 5px;
+        font-size: 15px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0d5c86;
+        box-shadow: 0 0 0 .15rem rgba(13,92,134,.15);
+    }
+
+    .submit-btn {
+        width: 100%;
+        height: 58px;
+        border: none;
+        border-radius: 14px;
+        background-color: #0d5c86;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        transition: .3s ease;
+        margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+        background-color: #094564;
+    }
+
+    .terms-container {
+        display: flex;
+        align-items: start;
+        gap: 10px;
+        margin: 15px 0 25px;
+    }
+
+    .terms-container label {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .terms-container a {
+        color: #0d5c86;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 30px;
+        color: #64748b;
+    }
+
+    .login-link a {
+        color: #0d5c86;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .text-danger {
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    @@media(max-width: 768px) {
+
+        .background-text {
+            display: none;
+        }
+
+        .register-card {
+            padding: 30px;
+        }
+
+        .register-title {
+            font-size: 28px;
+        }
+    }
+
+</style>
+
+<div class="register-page">
+
+    <div class="background-text">
+        Sign up
+    </div>
+
+    <div class="register-card">
+
+        <h1 class="register-title">
+            Crear Usuario
+        </h1>
+
+        <p class="register-subtitle">
+            Completa la información para registrar un nuevo usuario.
+        </p>
+
+        <form method="post"
+              asp-controller="Users"
+              asp-action="Create">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold mb-3">
+                    Tipo de usuario
+                </label>
+
+                <div class="role-container">
+
+                    @foreach (SelectListItem role in ViewBag.Roles)
+                    {
+                        <div class="role-option">
+
+                            <input type="radio"
+                                   asp-for="RoleId"
+                                   value="@role.Value"
+                                   id="role-@role.Value" />
+
+                            <label class="role-label"
+                                   for="role-@role.Value">
+
+                                @role.Text
+
+                            </label>
+
+                        </div>
+                    }
+
+                </div>
+
+                <span asp-validation-for="RoleId"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <input asp-for="FirstName"
+                           class="form-control"
+                           placeholder="Nombres" />
+
+                    <span asp-validation-for="FirstName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <input asp-for="LastName"
+                           class="form-control"
+                           placeholder="Apellidos" />
+
+                    <span asp-validation-for="LastName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="mb-2">
+
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="Correo electrónico" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-2">
+
+                <input asp-for="PhoneNumber"
+                       class="form-control"
+                       placeholder="Número telefónico" />
+
+                <span asp-validation-for="PhoneNumber"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-2">
+
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Contraseña" />
+
+                <span asp-validation-for="Password"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="terms-container">
+
+                <input type="checkbox" required />
+
+                <label>
+                    Acepto los
+                    <a href="#">
+                        términos y condiciones
+                    </a>
+                </label>
+
+            </div>
+
+            <button type="submit"
+                    class="submit-btn">
+
+                Crear cuenta
+
+            </button>
+
+            <div class="login-link">
+
+                ¿Ya tienes una cuenta?
+
+                <a asp-controller="Account"
+                       asp-action="Login">
+
+                    Iniciar sesión
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

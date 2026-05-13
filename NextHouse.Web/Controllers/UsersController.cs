@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NextHouse.Application.UseCases.Account.Queries.GetRoleOptions;
 using NextHouse.Application.UseCases.Users.Commands.CreateUser;
 using NextHouse.Application.UseCases.Users.Queries.GetUsersList;
 using NextHouse.Application.Utilites.Mediator;
@@ -9,24 +10,31 @@ using NextHouse.Web.DTOs.Users;
 
 namespace PrivateBlog.Web.Controllers
 {
-    [ApiController]
+
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {
         private readonly IMediator _mediator;
-
-        public UsersController(IMediator mediator)
+        private readonly INotyfService _notifyService;
+        public UsersController(INotyfService notifyService, IMediator mediator)
         {
+            _notifyService = notifyService;
             _mediator = mediator;
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            await LoadRolesSelectListAsync();
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserDTO dto)
         {
 
-
+            try
+            {
                 CreateUserCommand command = new CreateUserCommand
                 {
                     FirstName = dto.FirstName,
@@ -38,8 +46,23 @@ namespace PrivateBlog.Web.Controllers
                 };
 
                 await _mediator.Send(command);
-            return Ok();
-        }
+                _notifyService.Success("Usuario creado exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                _notifyService.Error($"Error al crear el usuario: {ex.Message}");
+                await LoadRolesSelectListAsync();
+                ModelState.AddModelError(string.Empty, ex.Message);
+                
+                return View(dto);
+            }
 
+            return RedirectToAction("Login", "Account");
+        }
+        private async Task LoadRolesSelectListAsync()
+        {
+            IReadOnlyList<RoleOptionDTO> roles = await _mediator.Send(new GetRoleOptionsQuery());
+            ViewBag.Roles = new SelectList(roles, nameof(RoleOptionDTO.Id), nameof(RoleOptionDTO.Name));
+        }
     }
 }

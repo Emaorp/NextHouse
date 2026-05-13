@@ -1,8 +1,258 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@using NextHouse.Application.UseCases.Users.Commands.CreateUser;
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    .hero-section {
+        min-height: 90vh;
+        background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-custom {
+        background-color: white;
+        padding: 18px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    }
+
+    .brand-logo {
+        font-size: 32px;
+        color: #0d5c86;
+    }
+
+    .brand-text {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .nav-link {
+        color: #1e293b !important;
+        font-weight: 500;
+        margin-left: 15px;
+    }
+
+    .publish-btn {
+        background-color: #0d5c86;
+        color: white;
+        border-radius: 12px;
+        padding: 12px 22px;
+        font-weight: 600;
+    }
+
+    .hero-content {
+        color: white;
+        max-width: 650px;
+    }
+
+        .hero-content h1 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 25px;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            color: rgba(255,255,255,.9);
+            margin-bottom: 40px;
+        }
+
+    .filter-container {
+        background-color: white;
+        border-radius: 24px;
+        padding: 35px;
+        margin-top: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+    }
+
+    .filter-tabs {
+        display: flex;
+        margin-bottom: 30px;
+        gap: 10px;
+    }
+
+    .filter-tab {
+        padding: 14px 30px;
+        border-radius: 14px;
+        border: none;
+        font-weight: 600;
+        background-color: #e2e8f0;
+        color: #1e293b;
+    }
+
+        .filter-tab.active {
+            background-color: #0d5c86;
+            color: white;
+        }
+
+    .filter-box {
+        border-right: 1px solid #e2e8f0;
+        padding-right: 18px;
+        margin-bottom: 20px;
+    }
+
+        .filter-box.no-border {
+            border-right: none;
+        }
+
+    .filter-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    .filter-icon {
+        color: #0d5c86;
+        font-size: 18px;
+        margin-right: 8px;
+    }
+
+    .form-select,
+    .form-control {
+        border: none;
+        box-shadow: none !important;
+        padding-left: 0;
+        font-size: 15px;
+        color: #0f172a;
+        font-weight: 500;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 60px;
+        border: none;
+        border-radius: 16px;
+        background-color: #0d5c86;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        transition: .3s ease;
+    }
+
+        .search-btn:hover {
+            background-color: #094564;
+        }
+
+    .empty-results {
+        padding: 120px 0;
+        text-align: center;
+    }
+
+        .empty-results i {
+            font-size: 110px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        .empty-results h2 {
+            color: #0f172a;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .empty-results p {
+            color: #64748b;
+            font-size: 18px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+    @@media(max-width: 991px) {
+
+        .hero-content h1 {
+            font-size: 48px;
+        }
+
+        .filter-box {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .filter-container {
+            padding: 25px;
+        }
+    }
+
+    @@media(max-width: 768px) {
+
+        .hero-content h1 {
+            font-size: 38px;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+        }
+
+        .filter-tabs {
+            flex-direction: column;
+        }
+
+        .filter-tab {
+            width: 100%;
+        }
+    }
+</style>
+
+
+
+<section class="hero-section">
+
+    <div class="container">
+
+        <div class="hero-content">
+            <h1>Encuentra tu lugar ideal para vivir</h1>
+
+            <p>
+                Explora propiedades para arriendo o venta en las mejores ubicaciones.
+            </p>
+        </div>
+
+        <div class="filter-container">
+
+            <div class="filter-tabs">
+                <button class="filter-tab active">Arrendar</button>
+                <button class="filter-tab">Comprar</button>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+
+        <div class="empty-results">
+
+            <i class="bi bi-house-search"></i>
+
+            <h2>Encuentra tu próximo hogar</h2>
+
+            <p>
+                Usa los filtros anteriores para buscar propiedades
+                que se ajusten a lo que necesitas.
+            </p>
+        </div>
+    </div>
+</section>
+
