@@ -24,6 +24,9 @@ namespace NextHouse.Persistence
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped<IPropertyRequestRepository, PropertyRequestRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
 

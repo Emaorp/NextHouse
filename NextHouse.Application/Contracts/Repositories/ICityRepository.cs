@@ -15,14 +15,6 @@ namespace NextHouse.Application.Contracts.Repositories
 
         Task<City?> GetWithPropertiesAsync(Guid id);
 
-        Task AddAsync(City city);
-
-        Task UpdateAsync(City city);
-
-        Task DeleteAsync(City city);
-
-        Task<bool> ExistsAsync(Guid id);
-
-        Task SaveChangesAsync();
+        
     }
 }

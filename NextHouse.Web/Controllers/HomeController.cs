@@ -1,4 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using NextHouse.Application.UseCases.City.Queries.GetCities;
+using NextHouse.Application.UseCases.Department.Queries.GetDerpartments;
+using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
+using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Web.DTOs.Properties;
 using NextHouse.Web.Models;
 using System.Diagnostics;
 
@@ -6,27 +12,75 @@ namespace NextHouse.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMediator _mediator;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMediator mediator)
         {
-            _logger = logger;
+            _mediator = mediator;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var departments = await _mediator.Send(new GetDepartmentsQuery());
+
+            var vm = new PropertyFilterViewModel
+            {
+                Departments = departments.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Name
+                })
+            };
+
+
+
+            return View(vm);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public async Task<JsonResult> GetCities(Guid departmentId)
         {
-            return View();
+            var cities = await _mediator.Send(
+                new GetCityQuery
+                {
+                    DepartmentId = departmentId
+                });
+
+            return Json(cities);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public async Task<IActionResult> Index(PropertyFilterViewModel model)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string propertyType = null ;
+            if (model.PropertyType != null)
+            {
+                propertyType = model.PropertyType.ToString();
+            }
+            var query = new GetPropertiesByFiltersQuery
+            {
+                CityId = model.CityId,
+                PropertyType = propertyType,
+                MinPrice = Convert.ToDouble(model.MinPrice),
+                MaxPrice = Convert.ToDouble(model.MaxPrice),
+                Bedrooms = model.Bedrooms,
+                Bathrooms = model.Bathrooms
+            };
+
+            var properties = await _mediator.Send(query);
+
+            var departments = await _mediator.Send(new GetDepartmentsQuery());
+
+            model.Departments = departments.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Name
+            });
+
+            model.Properties = properties;
+
+            return View(model);
         }
     }
 }

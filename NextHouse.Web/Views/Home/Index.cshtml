@@ -1,221 +1,592 @@
-﻿@using NextHouse.Application.UseCases.Users.Commands.CreateUser;
+﻿@using NextHouse.Web.DTOs.Properties
+@model PropertyFilterViewModel
+
 @{
     ViewData["Title"] = "Inicio";
 }
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    body { font-family: 'Poppins', sans-serif; background-color: #f5f7fa; }
-    .hero-section { min-height: 90vh; background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop'); background-size: cover; background-position: center; position: relative; display: flex; align-items: center; }
-    .hero-content { color: white; max-width: 650px; }
-    .hero-content h1 { font-size: 68px; font-weight: 700; line-height: 1.1; margin-bottom: 25px; }
-    .filter-container { background-color: white; border-radius: 24px; padding: 35px; margin-top: 40px; box-shadow: 0 15px 40px rgba(0,0,0,.12); }
-    .filter-tabs { display: flex; margin-bottom: 30px; gap: 10px; }
-    .filter-tab { padding: 14px 30px; border-radius: 14px; border: none; font-weight: 600; background-color: #e2e8f0; color: #1e293b; transition: 0.3s; }
-    .filter-tab.active { background-color: #0d5c86; color: white; }
-    .filter-box { border-right: 1px solid #e2e8f0; padding-right: 18px; margin-bottom: 20px; }
-    .filter-box.no-border { border-right: none; }
-    .filter-label { font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 10px; text-transform: uppercase; }
-    .filter-icon { color: #0d5c86; font-size: 18px; margin-right: 8px; }
-    .form-select, .form-control { border: none; box-shadow: none !important; padding-left: 0; font-size: 15px; color: #0f172a; font-weight: 500; }
-    .search-btn { width: 100%; height: 60px; border: none; border-radius: 16px; background-color: #0d5c86; color: white; font-size: 18px; font-weight: 600; transition: .3s ease; }
-    .search-btn:hover { background-color: #094564; }
-    .empty-results { padding: 120px 0; text-align: center; width: 100%; }
-    .empty-results i { font-size: 110px; color: #cbd5e1; margin-bottom: 25px; }
-    .empty-results h2 { color: #0f172a; font-size: 42px; font-weight: 700; margin-bottom: 15px; }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    .hero-section {
+        min-height: 90vh;
+        background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 80px 0;
+    }
+
+    .hero-content {
+        color: white;
+        max-width: 650px;
+        margin-bottom: 30px;
+    }
+
+        .hero-content h1 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 25px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+        }
+
+    .filter-container {
+        background-color: white;
+        border-radius: 24px;
+        padding: 35px;
+        margin-top: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+    }
+
+    .filter-tabs {
+        display: flex;
+        margin-bottom: 30px;
+        gap: 10px;
+    }
+
+    .filter-tab {
+        padding: 14px 30px;
+        border-radius: 14px;
+        border: none;
+        font-weight: 600;
+        background-color: #e2e8f0;
+        color: #1e293b;
+        transition: .3s;
+    }
+
+        .filter-tab.active {
+            background-color: #0d5c86;
+            color: white;
+        }
+
+    .filter-box {
+        border-right: 1px solid #e2e8f0;
+        padding-right: 18px;
+        margin-bottom: 20px;
+    }
+
+        .filter-box.no-border {
+            border-right: none;
+        }
+
+    .filter-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    .filter-icon {
+        color: #0d5c86;
+        font-size: 18px;
+        margin-right: 8px;
+    }
+
+    .form-select,
+    .form-control {
+        border: none !important;
+        box-shadow: none !important;
+        padding-left: 0;
+        font-size: 15px;
+        color: #0f172a;
+        font-weight: 500;
+        background-color: transparent;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 60px;
+        border: none;
+        border-radius: 16px;
+        background-color: #0d5c86;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        transition: .3s ease;
+    }
+
+        .search-btn:hover {
+            background-color: #094564;
+        }
+
+    .results-section {
+        padding: 80px 0;
+    }
+
+    .empty-results {
+        padding: 120px 0;
+        text-align: center;
+    }
+
+        .empty-results i {
+            font-size: 110px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        .empty-results h2 {
+            color: #0f172a;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+    .property-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        transition: .3s;
+    }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .property-image {
+        height: 240px;
+        object-fit: cover;
+    }
+
+    .property-price {
+        color: #0d5c86;
+        font-weight: 700;
+    }
+
+    @@media(max-width: 768px) {
+
+        .hero-content h1 {
+            font-size: 42px;
+        }
+
+        .filter-box {
+            border-right: none;
+            padding-right: 0;
+        }
+    }
+
 </style>
 
 <section class="hero-section">
+
     <div class="container">
+
         <div class="hero-content">
-            <h1>Encuentra tu lugar ideal para vivir</h1>
-            <p>Explora propiedades para arriendo o venta en las mejores ubicaciones.</p>
+
+            <h1>
+                Encuentra tu lugar ideal para vivir
+            </h1>
+
+            <p>
+                Explora propiedades para arriendo o venta
+                en las mejores ubicaciones.
+            </p>
+
         </div>
 
         <div class="filter-container">
-            <div class="filter-tabs">
-                <button class="filter-tab active" data-type="0">Arrendar</button>
-                <button class="filter-tab" data-type="1">Comprar</button>
-            </div>
 
-            <div class="row align-items-end">
-                <div class="col-lg-3 col-md-6">
-                    <div class="filter-box">
-                        <p class="filter-label"><i class="bi bi-geo-alt filter-icon"></i>Departamento</p>
-                        <select class="form-select" id="select-department">
-                            <option value="">Selecciona...</option>
-                        </select>
-                    </div>
+            <form asp-action="Index"
+                  asp-controller="Home"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="PropertyType"
+                       id="propertyType" />
+
+                <div class="filter-tabs">
+
+                    <button type="button"
+                            class="filter-tab active"
+                            data-type="0">
+
+                        Arrendar
+
+                    </button>
+
+                    <button type="button"
+                            class="filter-tab"
+                            data-type="1">
+
+                        Comprar
+
+                    </button>
+
                 </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="filter-box">
-                        <p class="filter-label"><i class="bi bi-buildings filter-icon"></i>Ciudad</p>
-                        <select class="form-select" id="select-city" disabled>
-                            <option value="">Elige depto primero</option>
-                        </select>
+                <div class="row align-items-end">
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="filter-box">
+
+                            <p class="filter-label">
+
+                                <i class="bi bi-geo-alt filter-icon"></i>
+                                Departamento
+
+                            </p>
+
+                            <select asp-for="DepartmentId"
+                                    asp-items="Model.Departments"
+                                    class="form-select"
+                                    id="select-department">
+
+                                <option value="">
+                                    Selecciona...
+                                </option>
+
+                            </select>
+
+                        </div>
+
                     </div>
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="filter-box">
+
+                            <p class="filter-label">
+
+                                <i class="bi bi-buildings filter-icon"></i>
+                                Ciudad
+
+                            </p>
+
+                            <select asp-for="CityId"
+                                    asp-items="Model.Cities"
+                                    class="form-select"
+                                    id="select-city"
+                                    disabled>
+
+                                <option value="">
+                                    Selecciona ciudad
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="filter-box">
+
+                            <p class="filter-label">
+
+                                <i class="bi bi-cash-stack filter-icon"></i>
+                                Precio
+
+                            </p>
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input asp-for="MinPrice"
+                                       type="number"
+                                       class="form-control"
+                                       placeholder="Mín" />
+
+                                <span class="text-muted">—</span>
+
+                                <input asp-for="MaxPrice"
+                                       type="number"
+                                       class="form-control"
+                                       placeholder="Máx" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <div class="filter-box">
+
+                            <p class="filter-label">
+
+                                <i class="bi bi-door-open-fill filter-icon"></i>
+                                Habitaciones
+
+                            </p>
+
+                            <select asp-for="Bedrooms"
+                                    class="form-select">
+
+                                <option value="">
+                                    Todas
+                                </option>
+
+                                <option value="1">1+</option>
+                                <option value="2">2+</option>
+                                <option value="3">3+</option>
+                                <option value="4">4+</option>
+                                <option value="5">5+</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <div class="filter-box">
+
+                            <p class="filter-label">
+
+                                <i class="bi bi-droplet-fill filter-icon"></i>
+                                Baños
+
+                            </p>
+
+                            <select asp-for="Bathrooms"
+                                    class="form-select">
+
+                                <option value="">
+                                    Todos
+                                </option>
+
+                                <option value="1">1+</option>
+                                <option value="2">2+</option>
+                                <option value="3">3+</option>
+                                <option value="4">4+</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="filter-box no-border">
+
+                            <button type="submit"
+                                    class="search-btn">
+
+                                <i class="bi bi-search me-2"></i>
+                                Buscar
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="filter-box">
-                        <p class="filter-label"><i class="bi bi-currency-dollar filter-icon"></i>Precio Máximo</p>
-                        <input type="number" class="form-control" id="input-price" placeholder="Cualquiera">
-                    </div>
-                </div>
+            </form>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="filter-box no-border">
-                        <button class="search-btn" id="btn-search">
-                            <i class="bi bi-search me-2"></i> Buscar
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
+
     </div>
+
 </section>
 
-<section>
+<section class="results-section">
+
     <div class="container">
-        <div id="results-area" class="empty-results">
-            <i class="bi bi-house-search"></i>
-            <h2>Encuentra tu próximo hogar</h2>
-            <p>Usa los filtros anteriores para buscar propiedades que se ajusten a lo que necesitas.</p>
-        </div>
+
+        @if (Model.Properties != null &&
+             Model.Properties.Any())
+        {
+            <div class="row">
+
+                @foreach (var property in Model.Properties)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+
+                        <div class="card property-card h-100">
+
+                            
+
+                            <div class="card-body p-4">
+
+                                <span class="badge bg-success mb-3">
+                                    @(property.Status == 0
+                                        ? "Disponible"
+                                        : "Ocupado")
+                                </span>
+
+                                <h5 class="fw-bold mb-2">
+                                    @property.Title
+                                </h5>
+
+                                <p class="text-muted small">
+
+                                    <i class="bi bi-geo-alt"></i>
+
+                                    @property.City
+
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+
+                                    <h4 class="property-price m-0">
+
+                                        @property.Price.ToString("C0")
+
+                                    </h4>
+
+                                    <a asp-controller="Property"
+                                           asp-action="Details"
+                                           asp-route-id="@property.Id"
+                                           class="btn btn-outline-primary btn-sm">
+
+                                        Ver más
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-results">
+
+                <i class="bi bi-house-search"></i>
+
+                <h2>
+                    Encuentra tu próximo hogar
+                </h2>
+
+                <p>
+                    Usa los filtros anteriores para buscar
+                    propiedades que se ajusten a lo que necesitas.
+                </p>
+
+            </div>
+        }
+
     </div>
+
 </section>
 
 @section Scripts {
+
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
-            const selectDept = document.getElementById("select-department");
-            const selectCity = document.getElementById("select-city");
-            const btnSearch = document.getElementById("btn-search");
-            const inputPrice = document.getElementById("input-price");
-            const resultsArea = document.getElementById("results-area");
-            const filterTabs = document.querySelectorAll(".filter-tab");
-            
-            let propertyTypeSelected = "0"; // Mantenemos como String para el backend
 
-            // 1. Manejo de pestañas
+            const propertyTypeInput =
+                document.getElementById("propertyType");
+
+            const filterTabs =
+                document.querySelectorAll(".filter-tab");
+
+            const departmentSelect =
+                document.getElementById("select-department");
+
+            const citySelect =
+                document.getElementById("select-city");
+
+            // =========================
+            // Property Type Tabs
+            // =========================
+
             filterTabs.forEach(tab => {
-                tab.addEventListener("click", function() {
-                    filterTabs.forEach(t => t.classList.remove("active"));
+
+                tab.addEventListener("click", function () {
+
+                    filterTabs.forEach(t =>
+                        t.classList.remove("active"));
+
                     this.classList.add("active");
-                    propertyTypeSelected = this.getAttribute("data-type");
+
+                    propertyTypeInput.value =
+                        this.getAttribute("data-type");
+
                 });
+
             });
 
-            // 2. Cargar Departamentos
-            fetch("/api/Location/departments")
-                .then(res => res.json())
-                .then(data => {
-                    data.forEach(d => {
-                        let opt = new Option(d.name, d.id);
-                        selectDept.add(opt);
-                    });
-                })
-                .catch(err => console.error("Error departamentos:", err));
 
-            // 3. Cargar Ciudades
-            selectDept.addEventListener("change", function () {
-                const deptId = this.value;
-                selectCity.innerHTML = '<option value="">Selecciona...</option>';
-                if (deptId) {
-                    fetch(`/api/Location/departments/${deptId}/cities`)
-                        .then(res => res.json())
-                        .then(data => {
-                            data.forEach(c => {
-                                let opt = new Option(c.name, c.id);
-                                selectCity.add(opt);
-                            });
-                            selectCity.disabled = false;
-                        });
-                } else {
-                    selectCity.disabled = true;
-                }
-            });
+            // =========================
+            // Load Cities
+            // =========================
 
-            // 4. Búsqueda con objeto 'query' envuelto
-            btnSearch.addEventListener("click", function() {
-                const cityId = selectCity.value;
-                const maxPriceValue = inputPrice.value;
+            departmentSelect.addEventListener("change", async function () {
 
-                const payload = {
-                    query: {
-                        cityId: cityId ? cityId : null,
-                        propertyType: propertyTypeSelected,
-                        minPrice: 0,
-                        maxPrice: maxPriceValue ? parseFloat(maxPriceValue) : 2000000000,
-                        bedrooms: null,
-                        bathrooms: null
-                    }
-                };
+                const departmentId = this.value;
 
-                console.log("Enviando payload:", payload);
+                citySelect.innerHTML =
+                    '<option value="">Cargando...</option>';
 
-                resultsArea.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
+                citySelect.disabled = true;
 
-                fetch("/api/Property/filters", {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(async res => {
-                    if (!res.ok) {
-                        const errorMsg = await res.text();
-                        throw new Error(errorMsg);
-                    }
-                    return res.json();
-                })
-                .then(properties => renderProperties(properties))
-                .catch(err => {
-                    console.error("Error detallado:", err);
-                    resultsArea.innerHTML = `
-                        <div class="text-center py-5 text-danger">
-                            <i class="bi bi-exclamation-triangle fs-1"></i>
-                            <h4 class="mt-3">Error de validación</h4>
-                            <p class="small">El servidor rechazó la estructura del formulario.</p>
-                        </div>`;
-                });
-            });
+                if (!departmentId) {
 
-            function renderProperties(list) {
-                if (!list || list.length === 0) {
-                    resultsArea.innerHTML = '<i class="bi bi-house-search"></i><h2>Sin resultados</h2><p>Intenta con otros filtros.</p>';
+                    citySelect.innerHTML =
+                        '<option value="">Seleccione ciudad</option>';
+
                     return;
                 }
 
-                let html = '<div class="row mt-5 text-start">';
-                list.forEach(p => {
-                    const priceFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.price);
-                    html += `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
-                                <img src="${p.imageUrl || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=600'}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                                <div class="card-body p-4">
-                                    <span class="badge bg-success mb-2">${p.status === 0 ? 'Disponible' : 'Ocupado'}</span>
-                                    <h5 class="card-title fw-bold">${p.title}</h5>
-                                    <p class="text-muted small"><i class="bi bi-geo-alt"></i> ${p.city || 'Ubicación'}</p>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <h4 class="text-primary m-0 fw-bold">${priceFormatted}</h4>
-                                        <a href="/Property/Details/${p.id}" class="btn btn-outline-primary btn-sm">Ver más</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-                });
-                html += '</div>';
-                resultsArea.innerHTML = html;
-            }
+                try {
+
+                    const response =
+                        await fetch(`/Home/GetCities?departmentId=${departmentId}`);
+
+                    const cities =
+                        await response.json();
+
+                    citySelect.innerHTML =
+                        '<option value="">Seleccione ciudad</option>';
+
+                    cities.forEach(city => {
+
+                        citySelect.innerHTML += `
+                            <option value="${city.id}">
+                                ${city.name}
+                            </option>
+                        `;
+                    });
+
+                    citySelect.disabled = false;
+
+                }
+                catch {
+
+                    citySelect.innerHTML =
+                        '<option value="">Error cargando ciudades</option>';
+                }
+
+            });
+
         });
+
     </script>
+
 }
