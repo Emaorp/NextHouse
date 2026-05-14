@@ -76,6 +76,21 @@
                     color: white !important;
                 }
 
+            .login-btn {
+                color: #0d5c86 !important;
+                font-weight: 600;
+                margin-left: 15px;
+                border: 2px solid #0d5c86;
+                border-radius: 14px;
+                padding: 10px 22px !important;
+                transition: .3s ease;
+            }
+
+                .login-btn:hover {
+                    background-color: #0d5c86;
+                    color: white !important;
+                }
+
             main {
                 min-height: calc(100vh - 120px);
             }
@@ -163,14 +178,18 @@
 
                     </li>
 
-                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-flex flex-column flex-lg-row gap-2">
+
+                        <a asp-controller="Account"
+                               asp-action="Login"
+                               class="btn login-btn">
+                            Iniciar sesión
+                        </a>
 
                         <a asp-controller="Users"
                                asp-action="Create"
                                class="btn create-user-btn">
-
                             Crear usuario
-
                         </a>
 
                     </li>
