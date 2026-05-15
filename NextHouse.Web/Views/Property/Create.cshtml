@@ -1,0 +1,464 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using NextHouse.Domain.Entities.Properties
+
+@model NextHouse.Application.UseCases.Property.Commands.CreateProperty.CreatePropertyDto;
+
+@{
+    ViewData["Title"] = "Crear Propiedad";
+}
+
+<style>
+
+    .page-wrapper {
+        padding: 50px 0;
+    }
+
+    .page-header {
+        margin-bottom: 35px;
+    }
+
+    .page-title {
+        font-size: 38px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    .property-card {
+        background-color: white;
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: 0 12px 35px rgba(0,0,0,.06);
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 10px;
+    }
+
+    .form-control,
+    .form-select,
+    textarea {
+        border-radius: 16px;
+        border: 1px solid #dbe2ea;
+        min-height: 56px;
+        padding: 14px 18px;
+        font-size: 15px;
+        transition: .3s ease;
+    }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: #0d5c86;
+            box-shadow: 0 0 0 .15rem rgba(13,92,134,.15);
+        }
+
+    textarea {
+        min-height: 140px;
+        resize: none;
+    }
+
+    .submit-btn {
+        height: 58px;
+        border: none;
+        border-radius: 18px;
+        background-color: #0d5c86;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 0 35px;
+        transition: .3s ease;
+    }
+
+        .submit-btn:hover {
+            background-color: #094564;
+        }
+
+    .cancel-btn {
+        height: 58px;
+        border-radius: 18px;
+        font-weight: 600;
+        padding: 0 35px;
+    }
+
+    .text-danger {
+        font-size: 14px;
+        margin-top: 6px;
+        display: block;
+    }
+
+    @@media(max-width: 768px) {
+
+        .property-card {
+            padding: 28px;
+        }
+
+        .page-title {
+            font-size: 30px;
+        }
+    }
+
+</style>
+
+<div class="container page-wrapper">
+
+    <div class="page-header">
+
+        <h1 class="page-title">
+            Crear propiedad
+        </h1>
+
+        <p class="page-subtitle">
+            Publica una nueva propiedad en la plataforma.
+        </p>
+
+    </div>
+
+    <div class="property-card">
+
+        <form asp-controller="Property"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-4">
+            </div>
+
+            <h3 class="section-title">
+                Información general
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Title"
+                           class="form-label">
+
+                        Título
+
+                    </label>
+
+                    <input asp-for="Title"
+                           class="form-control"
+                           placeholder="Ej: Apartamento moderno en Medellín" />
+
+                    <span asp-validation-for="Title"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Type"
+                           class="form-label">
+
+                        Tipo de publicación
+
+                    </label>
+
+                    <select asp-for="Type"
+                            class="form-select"
+                            asp-items="Html.GetEnumSelectList<PropertyType>()">
+
+                        <option value="">
+                            Selecciona una opción
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="Type"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-12 mb-4">
+
+                    <label asp-for="Description"
+                           class="form-label">
+
+                        Descripción
+
+                    </label>
+
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              placeholder="Describe la propiedad..."></textarea>
+
+                    <span asp-validation-for="Description"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <h3 class="section-title mt-4">
+                Características
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-3 mb-4">
+
+                    <label asp-for="Price"
+                           class="form-label">
+
+                        Precio
+
+                    </label>
+
+                    <input asp-for="Price"
+                           class="form-control"
+                           placeholder="Ej: 350000000" />
+
+                    <span asp-validation-for="Price"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-3 mb-4">
+
+                    <label asp-for="Bedrooms"
+                           class="form-label">
+
+                        Habitaciones
+
+                    </label>
+
+                    <input asp-for="Bedrooms"
+                           class="form-control" />
+
+                    <span asp-validation-for="Bedrooms"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-3 mb-4">
+
+                    <label asp-for="Bathrooms"
+                           class="form-label">
+
+                        Baños
+
+                    </label>
+
+                    <input asp-for="Bathrooms"
+                           class="form-control" />
+
+                    <span asp-validation-for="Bathrooms"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-3 mb-4">
+
+                    <label asp-for="Area"
+                           class="form-label">
+
+                        Área (m²)
+
+                    </label>
+
+                    <input asp-for="Area"
+                           class="form-control" />
+
+                    <span asp-validation-for="Area"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <h3 class="section-title mt-4">
+                Ubicación
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Departamento
+                    </label>
+
+                    <select class="form-select"
+                            id="department-select">
+
+                        <option value="">
+                            Selecciona un departamento
+                        </option>
+
+                        @foreach (SelectListItem department in ViewBag.Departments)
+                        {
+                            <option value="@department.Value">
+                                @department.Text
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="CityId"
+                           class="form-label">
+
+                        Ciudad
+
+                    </label>
+
+                    <select asp-for="CityId"
+                            class="form-select"
+                            id="city-select">
+
+                        <option value="">
+                            Selecciona una ciudad
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="CityId"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Neighborhood"
+                           class="form-label">
+
+                        Barrio
+
+                    </label>
+
+                    <input asp-for="Neighborhood"
+                           class="form-control"
+                           placeholder="Ej: El Poblado" />
+
+                    <span asp-validation-for="Neighborhood"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Address"
+                           class="form-label">
+
+                        Dirección
+
+                    </label>
+
+                    <input asp-for="Address"
+                           class="form-control"
+                           placeholder="Ej: Calle 10 #20-30" />
+
+                    <span asp-validation-for="Address"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+
+                <button type="submit"
+                        class="submit-btn">
+
+                    <i class="bi bi-house-add-fill me-2"></i>
+                    Crear propiedad
+
+                </button>
+
+                <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-light cancel-btn">
+
+                    Cancelar
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        const departmentSelect =
+            document.getElementById("department-select");
+
+        const citySelect =
+            document.getElementById("city-select");
+
+        departmentSelect.addEventListener("change", async function () {
+
+            const departmentId = this.value;
+
+            citySelect.innerHTML =
+                '<option value="">Cargando ciudades...</option>';
+
+            if (!departmentId) {
+
+                citySelect.innerHTML =
+                    '<option value="">Selecciona una ciudad</option>';
+
+                return;
+            }
+
+            const response =
+                await fetch(`/Property/GetCities?departmentId=${departmentId}`);
+
+            const cities = await response.json();
+
+            citySelect.innerHTML =
+                '<option value="">Selecciona una ciudad</option>';
+
+            cities.forEach(city => {
+
+                citySelect.innerHTML += `
+                    <option value="${city.id}">
+                        ${city.name}
+                    </option>
+                `;
+            });
+        });
+
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

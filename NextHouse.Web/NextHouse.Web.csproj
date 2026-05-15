@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Agents\" />
-    <Folder Include="Views\Properties\" />
   </ItemGroup>
 
   <ItemGroup>
