@@ -1,5 +1,10 @@
+@using NextHouse.Application.Contracts.Security
+@using NextHouse.Application.UseCases.Account.Queries.UserHasPermission
 @using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
+@using System.Security.Claims
 @model GetPropertyByIdResponseDTO
+@using NextHouse.Application.Utilites.Mediator
+@inject IMediator Mediator
 
 @{
     ViewData["Title"] = Model.Title;
@@ -250,14 +255,34 @@
                     </div>
 
                 </div>
-
-                <button class="request-btn"
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @if (await Mediator.Send(new UserHasPermissionQuery
+                {
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    PermissionCode = PermissionCodesCatalog.CREATE_REQUESTS
+                }))
+                    {
+                         <button class="request-btn"
                         data-bs-toggle="modal"
                         data-bs-target="#requestModal">
                     <i class="bi bi-send-fill me-2"></i>
                     Realizar solicitud
                 </button>
+                        
+                    }
 
+                }
+                else
+                {
+                    
+                     <button class="request-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#requestModal">
+                    <i class="bi bi-send-fill me-2"></i>
+                    Realizar solicitud
+                </button>
+                }
             </div>
         </div>
 

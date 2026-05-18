@@ -47,6 +47,17 @@ public class PropertyRequestRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<PropertyRequest>>
+    GetByAgentIdAsync(string agentId)
+    {
+        return await _context.PropertyRequests
+            .Include(x => x.Property)
+            .ThenInclude(x => x.City)
+            .Where(x => x.Property.AgentId == agentId)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(PropertyRequest request)
     {
         await _context.PropertyRequests.AddAsync(request);

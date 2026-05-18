@@ -1,8 +1,10 @@
 using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Domain.Entities.Account;
 using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
@@ -40,7 +42,7 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
                 Type = dto.Type,
                 Status = Domain.Entities.Properties.PropertyStatus.Available,
                 CreatedAt = DateTime.Now,
-                OwnerId = "246A3F84-4376-441C-B410-15F647ABDA4E"
+                OwnerId = dto.OwnerId
             };
 
             await _propertyRepository.AddAsync(newProperty);

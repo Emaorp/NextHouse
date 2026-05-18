@@ -16,8 +16,8 @@ namespace NextHouse.Application.Contracts.Security
         public const string EDIT_REQUESTS = "editRequests";
         public const string DELETE_REQUESTS = "deleteRequests";
 
-        //public const string SHOW_USERS = "showUsers";
-        //public const string CREATE_USERS = "createUsers";
+      //public const string SHOW_USERS = "showUsers";
+        public const string CREATE_USERS = "createUsers";
         //public const string EDIT_USERS = "editUsers";
         //public const string DELETE_USERS = "deleteUsers";
 

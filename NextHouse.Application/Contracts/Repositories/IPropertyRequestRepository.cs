@@ -13,6 +13,7 @@ namespace NextHouse.Application.Contracts.Repositories
 
         Task<IEnumerable<PropertyRequest>> GetByPropertyIdAsync(
             Guid propertyId);
+        Task<IEnumerable<PropertyRequest>>GetByAgentIdAsync(string agentId);
 
         Task AddAsync(PropertyRequest request);
 

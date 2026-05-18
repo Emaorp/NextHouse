@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.City.Queries.GetCities;
 using NextHouse.Application.UseCases.Department.Queries.GetDerpartments;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Web.DTOs.Properties;
 using NextHouse.Web.Models;
+using NextHouse.Web.Security;
 using System.Diagnostics;
 
 namespace NextHouse.Web.Controllers
@@ -20,6 +22,7 @@ namespace NextHouse.Web.Controllers
         }
 
         [HttpGet]
+
         public async Task<IActionResult> Index()
         {
             var departments = await _mediator.Send(new GetDepartmentsQuery());
