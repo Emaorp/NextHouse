@@ -1,4 +1,9 @@
-﻿<!-- Views/Shared/_Layout.cshtml -->
+﻿@using NextHouse.Application.Contracts.Security
+@using NextHouse.Application.UseCases.Account.Queries.UserHasPermission
+@using System.Security.Claims
+@using NextHouse.Application.Utilites.Mediator
+@inject IMediator Mediator
+<!-- Views/Shared/_Layout.cshtml -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -179,102 +184,145 @@
                     </li>
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <li class="nav-item dropdown ms-lg-3">
+
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+           href="#"
+           role="button"
+           data-bs-toggle="dropdown">
+
+            <i class="bi bi-person-circle fs-5"></i>
+
+            <span class="fw-semibold">
+                @User.Identity.Name
+            </span>
+
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+
+            <li>
+
+                <a class="dropdown-item"
+                   asp-controller="Profile"
+                   asp-action="Index">
+
+                    <i class="bi bi-person me-2"></i>
+                    Mi perfil
+
+                </a>
+
+            </li>
+
+                                    @if (await Mediator.Send(new UserHasPermissionQuery
+{
+    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+    PermissionCode = PermissionCodesCatalog.CREATE_USERS
+}))
+{
+    <li>
+
+        <a class="dropdown-item"
+           asp-controller="Users"
+           asp-action="Create">
+
+            <i class="bi bi-person-plus me-2"></i>
+            Crear usuario
+
+        </a>
+
+    </li>
+}
+
+                                @if (await Mediator.Send(new UserHasPermissionQuery
                     {
-                        <li class="nav-item dropdown ms-lg-3">
+                        UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                        PermissionCode = PermissionCodesCatalog.CREATE_PROPERTIES
+                    })) { 
+                                    <li>
 
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
-                                   href="#"
-                                   role="button"
-                                   data-bs-toggle="dropdown">
+                <a class="dropdown-item"
+                   asp-controller="Property"
+                   asp-action="Create">
 
-                                <i class="bi bi-person-circle fs-5"></i>
+                    <i class="bi bi-house-add me-2"></i>
+                    Crear propiedad
 
-                                <span class="fw-semibold">
-                                    @User.Identity.Name
-                                </span>
+                </a>
 
-                            </a>
-
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-
-                                <li>
-
-                                    <a class="dropdown-item"
-                                           asp-controller="Profile"
-                                           asp-action="Index">
-
-                                        <i class="bi bi-person me-2"></i>
-                                        Mi perfil
-
-                                    </a>
-
-
-
-                                </li>
-
-                                <li>
-
-                                    <a class="dropdown-item"
-                                           asp-controller="Property"
-                                           asp-action="Create">
-
-                                        <i class="bi bi-house-add me-2"></i>
-                                        Crear propiedad
-
-                                    </a>
-
-                                </li>
-
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-
-                                <li>
-
-                                    <form asp-controller="Account"
-                                          asp-action="Logout"
-                                          method="post">
-
-                                        @Html.AntiForgeryToken()
-
-                                        <button type="submit"
-                                                class="dropdown-item text-danger">
-
-                                            <i class="bi bi-box-arrow-right me-2"></i>
-                                            Cerrar sesión
-
-                                        </button>
-
-                                    </form>
-
-                                </li>
-
-                            </ul>
-
-                        </li>
+            </li>
                     }
-                    else
-                    {
-                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-flex flex-column flex-lg-row gap-2">
+                    
+                                @if (await Mediator.Send(new UserHasPermissionQuery
+                                {
+                                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                                    PermissionCode = PermissionCodesCatalog.SHOW_REQUESTS
+                                }))
+                                {
+            <li>
 
-                            <a asp-controller="Account"
-                                   asp-action="Login"
-                                   class="btn login-btn">
+                <a class="dropdown-item"
+                   asp-controller="PropertyRequest"
+                   asp-action="MyRequests">
 
-                                Iniciar sesión
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Mis solicitudes
 
-                            </a>
+                </a>
 
-                            <a asp-controller="Users"
-                                   asp-action="Create"
-                                   class="btn create-user-btn">
+            </li>
+                                }
+            <li>
+                <hr class="dropdown-divider">
+            </li>
 
-                                Crear usuario
+            <li>
 
-                            </a>
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post">
 
-                        </li>
-                    }
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="dropdown-item text-danger">
+
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Cerrar sesión
+
+                    </button>
+
+                </form>
+
+            </li>
+
+        </ul>
+
+    </li>
+}
+else
+{
+    <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-flex flex-column flex-lg-row gap-2">
+
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn login-btn">
+
+            Iniciar sesión
+
+        </a>
+
+        <a asp-controller="Users"
+           asp-action="Create"
+           class="btn create-user-btn">
+
+            Crear usuario
+
+        </a>
+
+    </li>
+}
 
                 </ul>
 

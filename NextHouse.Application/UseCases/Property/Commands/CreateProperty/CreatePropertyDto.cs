@@ -1,6 +1,7 @@
 using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 {
@@ -27,6 +28,7 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
         public Guid CityId { get; set; }
 
         public PropertyType Type { get; set; }
+        public string? OwnerId { get; set; }
 
         /// <summary>
         /// URLs de las imágenes subidas (máximo 10)

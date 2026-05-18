@@ -1,8 +1,21 @@
-﻿@using NextHouse.Web.DTOs.Users
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using NextHouse.Application.Contracts.Security
+@using NextHouse.Application.UseCases.Account.Queries.UserHasPermission
+@using NextHouse.Web.DTOs.Users
+@using System.Security.Claims
+@using NextHouse.Application.Utilites.Mediator
+@inject IMediator Mediator
 @model CreateUserDTO
 
 @{
     ViewData["Title"] = "Crear Usuario";
+
+    bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    bool isAdmin = isAuthenticated == false ? false :  await Mediator.Send(new UserHasPermissionQuery
+            {
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                PermissionCode = PermissionCodesCatalog.CREATE_USERS
+            });
 }
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -217,23 +230,60 @@
 
                 <div class="role-container">
 
-                    @foreach (SelectListItem role in ViewBag.Roles)
+                    @if (!isAuthenticated)
                     {
-                        <div class="role-option">
+                        // Usuario sin login -> SOLO Client
 
-                            <input type="radio"
-                                   asp-for="RoleId"
-                                   value="@role.Value"
-                                   id="role-@role.Value" />
+                        SelectListItem? clientRole =
+                        ((IEnumerable<SelectListItem>)ViewBag.Roles)
+                        .FirstOrDefault(x => x.Text == "Client");
 
-                            <label class="role-label"
-                                   for="role-@role.Value">
+                        if (clientRole != null)
+                        {
+                            <div class="role-option">
 
-                                @role.Text
+                                <input type="radio"
+                                       asp-for="RoleId"
+                                       value="@clientRole.Value"
+                                       id="role-@clientRole.Value"
+                                       checked />
 
-                            </label>
+                                <label class="role-label"
+                                       for="role-@clientRole.Value">
 
-                        </div>
+                                    @clientRole.Text
+
+                                </label>
+
+                            </div>
+                        }
+                    }
+                    else if (isAdmin)
+                    {
+                        // Admin autenticado -> puede crear Admin y Agent
+
+                        foreach (SelectListItem role in ViewBag.Roles)
+                        {
+                            if (role.Text == "Admin" ||
+                                role.Text == "Agent")
+                            {
+                                <div class="role-option">
+
+                                    <input type="radio"
+                                           asp-for="RoleId"
+                                           value="@role.Value"
+                                           id="role-@role.Value" />
+
+                                    <label class="role-label"
+                                           for="role-@role.Value">
+
+                                        @role.Text
+
+                                    </label>
+
+                                </div>
+                            }
+                        }
                     }
 
                 </div>
@@ -329,18 +379,21 @@
 
             </button>
 
-            <div class="login-link">
+            @if (!isAuthenticated)
+            {
+                <div class="login-link">
 
-                ¿Ya tienes una cuenta?
+                    ¿Ya tienes una cuenta?
 
-                <a asp-controller="Account"
+                    <a asp-controller="Account"
                        asp-action="Login">
 
-                    Iniciar sesión
+                        Iniciar sesión
 
-                </a>
+                    </a>
 
-            </div>
+                </div>
+            }
 
         </form>
 

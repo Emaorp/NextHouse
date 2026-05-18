@@ -11,6 +11,7 @@ using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Web.DTOs.Properties;
 using NextHouse.Web.Security;
+using System.Security.Claims;
 
 namespace NextHouse.Web.Controllers
 {
@@ -40,7 +41,7 @@ namespace NextHouse.Web.Controllers
         // POST: Property/Create
         // =========================================
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         [RequirePermission(PermissionCodesCatalog.CREATE_PROPERTIES)]
         public async Task<IActionResult> Create(
             CreatePropertyDto dto,
@@ -76,7 +77,7 @@ namespace NextHouse.Web.Controllers
             }
 
             dto.ImageUrls = imageUrls;
-
+            dto.OwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             CreatePropertyCommand command = new(dto);
             Guid propertyId = await _mediator.Send(command);
 
