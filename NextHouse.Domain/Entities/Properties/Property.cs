@@ -1,4 +1,4 @@
-﻿using NextHouse.Domain.Entities.Account;
+using NextHouse.Domain.Entities.Account;
 using NextHouse.Domain.Entities.Location;
 using NextHouse.Domain.Entities.Request;
 using System;
@@ -23,8 +23,9 @@ namespace NextHouse.Domain.Entities.Properties
 
         public double Area { get; set; }
 
+        public bool HasParking { get; set; }
+
         public string Address { get; set; } = string.Empty;
-       
 
         public string Neighborhood { get; set; } = string.Empty;
 
@@ -38,17 +39,13 @@ namespace NextHouse.Domain.Entities.Properties
 
         public DateTime? UpdatedAt { get; set; }
 
-        // Dueño
-
         public Guid CityId { get; set; }
         public City City { get; set; } = null!;
 
-        public string OwnerId { get; set; }
+        public string OwnerId { get; set; } = string.Empty;
 
-        // Agente asignado opcional
         public string? AgentId { get; set; }
 
-        // Relaciones
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
 
         public ICollection<PropertyRequest> Requests { get; set; } = new List<PropertyRequest>();

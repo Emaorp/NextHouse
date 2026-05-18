@@ -1,0 +1,430 @@
+@using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
+@model GetPropertyByIdResponseDTO
+
+@{
+    ViewData["Title"] = Model.Title;
+    string typeLabel = Model.Type == 0 ? "Arriendo" : "Venta";
+}
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    body { background-color: #f5f7fa; font-family: 'Poppins', sans-serif; }
+
+    .detail-wrapper { padding: 50px 0 80px; }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb-bar { margin-bottom: 28px; }
+    .breadcrumb-bar a { color: #0d5c86; text-decoration: none; font-weight: 500; }
+    .breadcrumb-bar span { color: #94a3b8; }
+
+    /* ── Gallery ── */
+    .gallery-main {
+        border-radius: 22px; overflow: hidden;
+        height: 420px; background: #e2e8f0; position: relative;
+    }
+    .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-main .no-photo {
+        display: flex; align-items: center; justify-content: center;
+        height: 100%; flex-direction: column; color: #94a3b8;
+    }
+    .gallery-main .no-photo i { font-size: 64px; margin-bottom: 12px; }
+
+    .gallery-thumbs {
+        display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px;
+    }
+    .gallery-thumbs img {
+        width: 90px; height: 70px; object-fit: cover;
+        border-radius: 12px; cursor: pointer; flex-shrink: 0;
+        border: 3px solid transparent; transition: .2s;
+    }
+    .gallery-thumbs img.active { border-color: #0d5c86; }
+
+    .type-badge {
+        position: absolute; top: 18px; left: 18px;
+        background: #0d5c86; color: white;
+        font-weight: 700; font-size: 13px; padding: 6px 16px;
+        border-radius: 30px;
+    }
+
+    /* ── Info card ── */
+    .info-card {
+        background: white; border-radius: 24px; padding: 36px;
+        box-shadow: 0 12px 35px rgba(0,0,0,.07); height: 100%;
+    }
+    .property-price {
+        font-size: 34px; font-weight: 700; color: #0d5c86; margin-bottom: 6px;
+    }
+    .property-title { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+    .property-location { color: #64748b; font-size: 15px; margin-bottom: 24px; }
+    .property-location i { color: #0d5c86; margin-right: 5px; }
+
+    .stats-grid {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 14px; margin-bottom: 28px;
+    }
+    .stat-item {
+        background: #f8fafc; border-radius: 16px;
+        padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+    }
+    .stat-item i { font-size: 22px; color: #0d5c86; }
+    .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+    .stat-value { font-size: 16px; font-weight: 700; color: #0f172a; }
+
+    .request-btn {
+        width: 100%; height: 58px; border: none; border-radius: 18px;
+        background-color: #0d5c86; color: white;
+        font-weight: 700; font-size: 17px; transition: .3s;
+    }
+    .request-btn:hover { background-color: #094564; }
+
+    /* ── Description ── */
+    .desc-card {
+        background: white; border-radius: 24px; padding: 36px;
+        box-shadow: 0 12px 35px rgba(0,0,0,.07); margin-top: 28px;
+    }
+    .desc-card h3 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 16px; }
+    .desc-card p { color: #475569; line-height: 1.8; }
+
+    /* ── Modal solicitud ── */
+    .modal-content { border-radius: 24px; border: none; overflow: hidden; }
+    .modal-header {
+        background: #0d5c86; color: white; padding: 24px 30px; border: none;
+    }
+    .modal-header .btn-close { filter: invert(1); }
+    .modal-body { padding: 30px; }
+    .modal-footer { padding: 20px 30px; border: none; }
+
+    .req-label { font-weight: 600; color: #334155; margin-bottom: 8px; font-size: 14px; }
+    .req-input {
+        border-radius: 14px; border: 1.5px solid #dbe2ea;
+        padding: 14px 18px; font-size: 15px; width: 100%;
+        transition: .3s; box-sizing: border-box;
+    }
+    .req-input:focus { outline: none; border-color: #0d5c86; box-shadow: 0 0 0 3px rgba(13,92,134,.12); }
+    textarea.req-input { min-height: 120px; resize: none; }
+
+    .char-count { font-size: 12px; color: #94a3b8; text-align: right; margin-top: 4px; }
+    .field-error { font-size: 13px; color: #ef4444; margin-top: 5px; display: none; }
+
+    .modal-submit-btn {
+        width: 100%; height: 52px; border: none; border-radius: 16px;
+        background-color: #0d5c86; color: white;
+        font-weight: 700; font-size: 16px; transition: .3s;
+    }
+    .modal-submit-btn:hover:not(:disabled) { background-color: #094564; }
+    .modal-submit-btn:disabled { background-color: #94a3b8; cursor: not-allowed; }
+
+    /* ── Alertas ── */
+    .alert-success-custom {
+        background: #f0fdf4; border: 1.5px solid #86efac;
+        border-radius: 16px; padding: 16px 20px; color: #16a34a;
+        font-weight: 600; margin-bottom: 24px;
+    }
+    .alert-error-custom {
+        background: #fef2f2; border: 1.5px solid #fca5a5;
+        border-radius: 16px; padding: 16px 20px; color: #dc2626;
+        font-weight: 600; margin-bottom: 24px;
+    }
+</style>
+
+<div class="container detail-wrapper">
+
+    <!-- Alertas de TempData -->
+    @if (TempData["RequestSuccess"] != null)
+    {
+        <div class="alert-success-custom">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["RequestSuccess"]
+        </div>
+    }
+    @if (TempData["RequestError"] != null)
+    {
+        <div class="alert-error-custom">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>@TempData["RequestError"]
+        </div>
+    }
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <a asp-controller="Home" asp-action="Index">
+            <i class="bi bi-house me-1"></i>Inicio
+        </a>
+        <span class="mx-2">/</span>
+        <span>@Model.Title</span>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- COLUMNA IZQUIERDA: Galería + descripción -->
+        <div class="col-lg-8">
+
+            <!-- Galería -->
+            <div class="gallery-main" id="galleryMain">
+                <span class="type-badge">@typeLabel</span>
+
+                @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+                {
+                    <img src="@Model.ImageUrls[0]"
+                         id="mainPhoto"
+                         alt="Foto principal de @Model.Title" />
+                }
+                else
+                {
+                    <div class="no-photo">
+                        <i class="bi bi-image"></i>
+                        <p>Sin fotos disponibles</p>
+                    </div>
+                }
+            </div>
+
+            @if (Model.ImageUrls != null && Model.ImageUrls.Count > 1)
+            {
+                <div class="gallery-thumbs" id="thumbsContainer">
+                    @for (int i = 0; i < Model.ImageUrls.Count; i++)
+                    {
+                        <img src="@Model.ImageUrls[i]"
+                             alt="Foto @(i+1)"
+                             class="@(i == 0 ? "active" : "")"
+                             data-src="@Model.ImageUrls[i]"
+                             onclick="changePhoto(this)" />
+                    }
+                </div>
+            }
+
+            <!-- Descripción -->
+            <div class="desc-card">
+                <h3><i class="bi bi-file-text me-2 text-primary"></i>Descripción</h3>
+                <p>@(string.IsNullOrWhiteSpace(Model.Description) ? "No hay descripción disponible." : Model.Description)</p>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: Info + botón solicitud -->
+        <div class="col-lg-4">
+            <div class="info-card">
+
+                <div class="property-price">
+                    @Model.Price.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                </div>
+
+                <h1 class="property-title">@Model.Title</h1>
+
+                <p class="property-location">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    @Model.Neighborhood — @Model.City, @Model.Department
+                </p>
+
+                <div class="stats-grid">
+
+                    <div class="stat-item">
+                        <i class="bi bi-door-open-fill"></i>
+                        <div>
+                            <div class="stat-label">Habitaciones</div>
+                            <div class="stat-value">@Model.Bedrooms</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <i class="bi bi-droplet-fill"></i>
+                        <div>
+                            <div class="stat-label">Baños</div>
+                            <div class="stat-value">@Model.Bathrooms</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <i class="bi bi-rulers"></i>
+                        <div>
+                            <div class="stat-label">Área</div>
+                            <div class="stat-value">@Model.Area m²</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <i class="bi bi-car-front-fill"></i>
+                        <div>
+                            <div class="stat-label">Parqueadero</div>
+                            <div class="stat-value">@(Model.HasParking ? "Sí" : "No")</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="request-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#requestModal">
+                    <i class="bi bi-send-fill me-2"></i>
+                    Realizar solicitud
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==============================
+     MODAL: Solicitud
+     ============================== -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="requestModalLabel">
+                    <i class="bi bi-send-fill me-2"></i>Realizar solicitud
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <form asp-controller="PropertyRequest"
+                  asp-action="Create"
+                  method="post"
+                  id="requestForm">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="PropertyId" value="@Model.Id" />
+
+                <div class="modal-body">
+
+                    <!-- Nombre -->
+                    <div class="mb-4">
+                        <label class="req-label">
+                            <i class="bi bi-person me-1"></i>Nombre completo *
+                        </label>
+                        <input type="text"
+                               name="Name"
+                               id="reqName"
+                               class="req-input"
+                               placeholder="Tu nombre completo"
+                               maxlength="100" />
+                        <div class="field-error" id="nameError">
+                            El nombre debe tener al menos 5 caracteres.
+                        </div>
+                    </div>
+
+                    <!-- Correo -->
+                    <div class="mb-4">
+                        <label class="req-label">
+                            <i class="bi bi-envelope me-1"></i>Correo electrónico *
+                        </label>
+                        <input type="email"
+                               name="Email"
+                               id="reqEmail"
+                               class="req-input"
+                               placeholder="tucorreo@ejemplo.com" />
+                        <div class="field-error" id="emailError">
+                            Ingresa un correo válido.
+                        </div>
+                    </div>
+
+                    <!-- Celular -->
+                    <div class="mb-4">
+                        <label class="req-label">
+                            <i class="bi bi-phone me-1"></i>Celular *
+                        </label>
+                        <input type="tel"
+                               name="PhoneNumber"
+                               id="reqPhone"
+                               class="req-input"
+                               placeholder="Ej: 3001234567"
+                               maxlength="20" />
+                        <div class="field-error" id="phoneError">
+                            Ingresa un número de celular.
+                        </div>
+                    </div>
+
+                    <!-- Mensaje (opcional) -->
+                    <div class="mb-2">
+                        <label class="req-label">
+                            <i class="bi bi-chat-text me-1"></i>Mensaje opcional
+                        </label>
+                        <textarea name="Message"
+                                  id="reqMessage"
+                                  class="req-input"
+                                  placeholder="¿Tienes alguna pregunta o comentario sobre la propiedad?"
+                                  maxlength="500"></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span> / 500 caracteres
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-light me-2 px-4"
+                            style="border-radius:14px; height:48px;"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="modal-submit-btn"
+                            id="submitBtn"
+                            disabled>
+                        <i class="bi bi-send me-2"></i>Enviar solicitud
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        // ===========================
+        // Galería de fotos
+        // ===========================
+        function changePhoto(thumb) {
+            const mainPhoto = document.getElementById('mainPhoto');
+            if (mainPhoto) {
+                mainPhoto.src = thumb.dataset.src;
+            }
+            document.querySelectorAll('#thumbsContainer img').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
+
+        // ===========================
+        // Validación solicitud
+        // ===========================
+        const reqName    = document.getElementById('reqName');
+        const reqEmail   = document.getElementById('reqEmail');
+        const reqPhone   = document.getElementById('reqPhone');
+        const reqMessage = document.getElementById('reqMessage');
+        const submitBtn  = document.getElementById('submitBtn');
+        const charCount  = document.getElementById('charCount');
+
+        function showError(id, show) {
+            document.getElementById(id).style.display = show ? 'block' : 'none';
+        }
+
+        function validateForm() {
+            const nameOk  = reqName.value.trim().length >= 5;
+            const emailOk = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(reqEmail.value.trim());
+            const phoneOk = reqPhone.value.trim().length > 0;
+
+            showError('nameError',  reqName.value.trim().length > 0  && !nameOk);
+            showError('emailError', reqEmail.value.trim().length > 0 && !emailOk);
+            showError('phoneError', false);
+
+            submitBtn.disabled = !(nameOk && emailOk && phoneOk);
+        }
+
+        reqName.addEventListener('input', validateForm);
+        reqEmail.addEventListener('input', validateForm);
+        reqPhone.addEventListener('input', function () {
+            showError('phoneError', this.value.trim().length === 0 && this === document.activeElement);
+            validateForm();
+        });
+
+        reqMessage.addEventListener('input', function () {
+            charCount.textContent = this.value.length;
+        });
+
+    </script>
+}
