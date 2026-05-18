@@ -1,10 +1,9 @@
-﻿using NextHouse.Application.Contracts.Repositories;
+using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Domain.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Collections.Specialized.BitVector32;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
 {
@@ -19,11 +18,11 @@ namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
 
         public async Task<GetPropertyByIdResponseDTO> Handle(GetPropertyByIdQuery request)
         {
-            Domain.Entities.Properties.Property? property = await _propertiesRepository.GetByIdAsync(request.Id);
+            var property = await _propertiesRepository.GetByIdWithImagesAsync(request.Id);
 
             if (property == null)
             {
-                throw new BussinesRuleException("La sección no existe");
+                throw new BussinesRuleException("La propiedad no existe");
             }
 
             return new GetPropertyByIdResponseDTO
@@ -35,15 +34,17 @@ namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
                 Bedrooms = property.Bedrooms,
                 Bathrooms = property.Bathrooms,
                 Area = property.Area,
+                HasParking = property.HasParking,
                 Address = property.Address,
                 Neighborhood = property.Neighborhood,
                 Type = (int)property.Type,
                 City = property.City.Name,
-                Departament = property.City.Department.Name
-
+                Department = property.City.Department.Name,
+                ImageUrls = property.Images
+                    .OrderByDescending(i => i.IsPrimary)
+                    .Select(i => i.ImageUrl)
+                    .ToList()
             };
-
         }
     }
-
 }

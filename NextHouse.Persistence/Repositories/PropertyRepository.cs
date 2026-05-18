@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
 using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NextHouse.Persistence.Repositories
@@ -41,6 +40,15 @@ namespace NextHouse.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<Property?> GetByIdWithImagesAsync(Guid id)
+        {
+            return await _context.Properties
+                .Include(x => x.City)
+                .ThenInclude(x => x.Department)
+                .Include(x => x.Images)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task UpdateAsync(Property property)
         {
             _context.Properties.Update(property);
@@ -70,31 +78,25 @@ namespace NextHouse.Persistence.Repositories
                 .Include(x => x.Images)
                 .AsQueryable();
 
-            // 1. Filtrar solo disponibles
             query = query.Where(x => x.Status == PropertyStatus.Available);
 
-            // 2. FILTRO POR CIUDAD (Corregido: Validamos que no sea Guid vacío)
             if (filters.CityId.HasValue && filters.CityId.Value != Guid.Empty)
             {
                 query = query.Where(x => x.CityId == filters.CityId.Value);
             }
 
-            // 3. FILTRO POR TIPO (Corregido para manejar "0" y "1")
             if (!string.IsNullOrWhiteSpace(filters.PropertyType))
             {
                 if (int.TryParse(filters.PropertyType, out int typeInt))
                 {
-                    // Si el frontend manda "0" o "1", lo comparamos numéricamente con el Enum
                     query = query.Where(x => (int)x.Type == typeInt);
                 }
                 else
                 {
-                    // Por si acaso mandan "Rent" o "Sale" como texto
                     query = query.Where(x => x.Type.ToString().ToLower() == filters.PropertyType.ToLower());
                 }
             }
 
-            // 4. RANGO DE PRECIO
             if (filters.MinPrice.HasValue && filters.MinPrice.Value > 0)
             {
                 query = query.Where(x => x.Price >= (decimal)filters.MinPrice.Value);
@@ -105,7 +107,6 @@ namespace NextHouse.Persistence.Repositories
                 query = query.Where(x => x.Price <= (decimal)filters.MaxPrice.Value);
             }
 
-            // 5. HABITACIONES Y BAÑOS
             if (filters.Bedrooms.HasValue && filters.Bedrooms.Value > 0)
             {
                 query = query.Where(x => x.Bedrooms == filters.Bedrooms.Value);

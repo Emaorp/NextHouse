@@ -1,4 +1,4 @@
-﻿using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
+using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
 using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,11 @@ namespace NextHouse.Application.Contracts.Repositories
     public interface IPropertyRepository
     {
         Task<Property?> GetByIdAsync(Guid id);
+
+        /// <summary>
+        /// Obtiene una propiedad por ID incluyendo sus imágenes
+        /// </summary>
+        Task<Property?> GetByIdWithImagesAsync(Guid id);
 
         Task<IEnumerable<Property>> GetAllAsync();
 
@@ -21,7 +26,5 @@ namespace NextHouse.Application.Contracts.Repositories
         Task<IEnumerable<Property>> GetAllByCityAsync(Guid cityId);
 
         Task<IEnumerable<Property>> GetByFiltersAsync(GetPropertiesByFiltersQuery filters);
-
     }
-
 }

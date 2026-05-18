@@ -1,9 +1,5 @@
-﻿using NextHouse.Domain.Entities.Account;
-using NextHouse.Domain.Entities.Location;
-using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
 {
@@ -23,16 +19,18 @@ namespace NextHouse.Application.UseCases.Property.Queries.GetPropertyByID
 
         public double Area { get; set; }
 
+        public bool HasParking { get; set; }
+
         public string Address { get; set; } = string.Empty;
 
         public string Neighborhood { get; set; } = string.Empty;
 
-        public string Departament { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
 
         public int Type { get; set; }
 
-        public string City { get; set; } = null!; 
+        public string City { get; set; } = null!;
 
-
+        public List<string> ImageUrls { get; set; } = new();
     }
 }

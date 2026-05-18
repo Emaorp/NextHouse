@@ -1,7 +1,6 @@
-﻿using NextHouse.Domain.Entities.Properties;
+using NextHouse.Domain.Entities.Properties;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 {
@@ -19,6 +18,8 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 
         public double Area { get; set; }
 
+        public bool HasParking { get; set; }
+
         public string Address { get; set; } = string.Empty;
 
         public string Neighborhood { get; set; } = string.Empty;
@@ -26,5 +27,10 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
         public Guid CityId { get; set; }
 
         public PropertyType Type { get; set; }
+
+        /// <summary>
+        /// URLs de las imágenes subidas (máximo 10)
+        /// </summary>
+        public List<string> ImageUrls { get; set; } = new();
     }
 }
