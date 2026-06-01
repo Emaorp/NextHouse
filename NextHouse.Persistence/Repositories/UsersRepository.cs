@@ -87,6 +87,35 @@ namespace NextHouse.Persistence.Repositories
                                        .ToListAsync(cancellationToken);
         }
 
+        public async Task<List<User>> GetUsersList(CancellationToken cancellationToken = default)
+        {
+            var users = await _context.Users
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            return users.Select(u => User.Reconstitute(
+                u.Id,
+                u.FirstName,
+                u.LastName,
+                u.UserName,
+                u.Email,
+                u.EmailConfirmed,
+                u.PhoneNumber,
+                u.RoleId
+            )).ToList();
+        }
+
+       public async Task<Role>GetRoleByIdAsync(string roleId, CancellationToken cancellationToken = default)
+        {
+            Role? role = await _context.Roles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r. Id == Guid.Parse(roleId), cancellationToken);
+            if (role is null)
+            {
+                throw new BussinesRuleException("El rol no existe.");
+            }
+            return role;
+        }
+
         public async Task UpdateAsync(User user, CancellationToken cancellationToken = default)
         {
             ApplicationUser? appUser = await _userManager.FindByIdAsync(user.Id);

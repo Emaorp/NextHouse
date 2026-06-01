@@ -233,8 +233,33 @@
         </a>
 
     </li>
-}
+           <li>
 
+                                        <a class="dropdown-item"
+                                               asp-controller="Users"
+                                               asp-action="Index">
+
+                                            <i class="bi bi-people-fill me-2"></i>
+                                            Administrar usuarios
+
+                                        </a>
+
+                                    </li>
+
+                                     <li>
+
+                                        <a class="dropdown-item"
+                                               asp-controller="Roles"
+                                               asp-action="Index">
+
+                                            <i class="bi bi-people-fill me-2"></i>
+                                            Administrar roles
+
+                                        </a>
+
+                                    </li>
+
+}
                                 @if (await Mediator.Send(new UserHasPermissionQuery
                     {
                         UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),

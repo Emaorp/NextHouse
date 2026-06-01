@@ -1,0 +1,302 @@
+﻿@using NextHouse.Application.UseCases.Roles.Queries
+
+@model List<GetRolesResponseDTO>
+
+@{
+    ViewData["Title"] = "Administración de Roles";
+}
+
+<style>
+
+    .page-wrapper {
+        padding: 50px 0;
+    }
+
+    .page-header {
+        margin-bottom: 35px;
+    }
+
+    .page-title {
+        font-size: 38px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    .roles-card {
+        background: white;
+        border-radius: 28px;
+        padding: 35px;
+        box-shadow: 0 12px 35px rgba(0,0,0,.06);
+    }
+
+    .role-list {
+        border-right: 1px solid #e2e8f0;
+        min-height: 500px;
+    }
+
+    .role-item {
+        padding: 14px 18px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: .3s;
+        margin-bottom: 10px;
+        border: 1px solid transparent;
+    }
+
+        .role-item:hover {
+            background: #f8fafc;
+        }
+
+        .role-item.active {
+            background: #f0f7fc;
+            border-color: #0d5c86;
+        }
+
+    .role-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .permissions-container {
+        padding-left: 30px;
+    }
+
+    .module-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .module-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 15px;
+    }
+
+    .form-check {
+        margin-bottom: 12px;
+    }
+
+    .form-check-input {
+        cursor: pointer;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+    }
+
+    .save-btn {
+        height: 58px;
+        border: none;
+        border-radius: 18px;
+        background-color: #0d5c86;
+        color: white;
+        font-weight: 600;
+        padding: 0 35px;
+    }
+
+        .save-btn:hover {
+            background-color: #094564;
+        }
+
+</style>
+
+<div class="container page-wrapper">
+
+    ```
+    <div class="page-header">
+
+        <h1 class="page-title">
+            Administración de Roles
+        </h1>
+
+        <p class="page-subtitle">
+            Gestiona los permisos asociados a cada rol.
+        </p>
+
+    </div>
+
+    <div class="roles-card">
+
+        <div class="row">
+
+            <div class="col-md-4 role-list">
+
+                <h5 class="mb-4 fw-bold">
+                    Roles
+                </h5>
+
+                @foreach (var role in Model)
+                {
+                    <div class="role-item"
+                         data-role-id="@role.Id">
+
+                        <div class="role-name">
+                            @role.Name
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="permissions-container">
+
+                    <h5 class="fw-bold mb-4">
+                        Permisos
+                    </h5>
+
+                    <form id="permissionsForm">
+
+                        <input type="hidden"
+                               id="selectedRoleId"
+                               name="RoleId" />
+
+                        <div id="permissionsArea">
+
+                            <div class="text-muted">
+                                Seleccione un rol para visualizar sus permisos.
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4">
+
+                            <button type="submit"
+                                    class="save-btn">
+
+                                <i class="bi bi-shield-check me-2"></i>
+
+                                Guardar permisos
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    ```
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        let currentRoleId = null;
+
+        document.querySelectorAll(".role-item")
+            .forEach(item => {
+
+                item.addEventListener("click", async function () {
+
+                    document.querySelectorAll(".role-item")
+                        .forEach(x => x.classList.remove("active"));
+
+                    this.classList.add("active");
+
+                    currentRoleId =
+                        this.dataset.roleId;
+
+                    document.getElementById("selectedRoleId")
+                        .value = currentRoleId;
+
+                    const response =
+                        await fetch(`/Account/GetRolePermissions?roleId=${currentRoleId}`);
+
+                    const modules =
+                        await response.json();
+
+                    renderPermissions(modules);
+                });
+
+            });
+
+        function renderPermissions(modules)
+        {
+            const container =
+                document.getElementById("permissionsArea");
+
+            container.innerHTML = "";
+
+            modules.forEach(module => {
+
+                let html =
+                `
+                <div class="module-card">
+
+                    <div class="module-title">
+                        ${module.module}
+                    </div>
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input permission-checkbox"
+                            type="checkbox"
+                            value="${module.permissionId}"
+                            ${module.assigned ? "checked" : ""}>
+
+                        <label class="form-check-label">
+
+                            ${module.description}
+
+                        </label>
+
+                    </div>
+                    `;
+
+                html += `</div>`;
+
+                container.innerHTML += html;
+            });
+        }
+
+        document.getElementById("permissionsForm")
+            .addEventListener("submit", async function (e) {
+
+                e.preventDefault();
+
+                const permissions =
+                    [...document.querySelectorAll(".permission-checkbox:checked")]
+                        .map(x => x.value);
+
+                await fetch("/Roles/UpdatePermissions",
+                {
+                    method: "POST",
+
+                    headers:
+                    {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(
+                    {
+                        roleId: currentRoleId,
+                        permissionIds: permissions
+                    })
+                });
+
+                location.reload();
+            });
+
+    </script>
+
+}

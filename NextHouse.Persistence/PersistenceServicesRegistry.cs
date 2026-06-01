@@ -30,7 +30,7 @@ namespace NextHouse.Persistence
 
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
-
+            services.AddScoped<IRoleRepository, RoleRepository>();
             //services.AddTransient<SeedDb>();
 
             // Inrfastructure
