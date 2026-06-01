@@ -79,6 +79,16 @@ namespace NextHouse.Web.Controllers
 
                 imageUrls.Add($"/uploads/properties/{uniqueName}");
             }
+            // Si no se seleccionó agente, asignar uno aleatorio
+            if (string.IsNullOrWhiteSpace(dto.AgentId))
+            {
+                var agents = await _usersRepository.GetByRoleAsync("Agent");
+                if (agents.Any())
+                {
+                    var random = new Random();
+                    dto.AgentId = agents[random.Next(agents.Count)].Id;
+                }
+            }
 
             dto.ImageUrls = imageUrls;
             dto.OwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
