@@ -29,6 +29,7 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
 
         public PropertyType Type { get; set; }
         public string? OwnerId { get; set; }
+        public string? AgentId { get; set; }
 
         /// <summary>
         /// URLs de las imágenes subidas (máximo 10)

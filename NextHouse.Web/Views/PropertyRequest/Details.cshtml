@@ -1,0 +1,195 @@
+﻿@using NextHouse.Application.UseCases.PropertyRequest.Querys.Get
+@using NextHouse.Domain.Entities.Request
+
+@model PropertyRequestResponseDto
+
+@{
+    ViewData["Title"] = "Detalle de Solicitud";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    .detail-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .detail-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 30px;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 20px;
+        font-size: 15px;
+        color: #334155;
+    }
+
+        .info-row i {
+            font-size: 20px;
+            color: #0d5c86;
+            margin-top: 2px;
+        }
+
+    .info-label {
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 2px;
+    }
+
+    .message-box {
+        background: #f8fafc;
+        border-left: 4px solid #0d5c86;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        font-size: 15px;
+        color: #334155;
+    }
+
+    .status-form {
+        margin-top: 35px;
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 25px;
+    }
+
+        .status-form label {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+    .status-select {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        margin-bottom: 16px;
+    }
+
+    .save-btn {
+        background-color: #0d5c86;
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: .3s;
+    }
+
+        .save-btn:hover {
+            background-color: #094564;
+        }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #0d5c86;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 30px;
+    }
+
+        .back-btn:hover {
+            color: #094564;
+        }
+</style>
+
+<div class="container" style="padding: 60px 0;">
+
+    <a asp-action="MyRequests" class="back-btn">
+        <i class="bi bi-arrow-left"></i> Volver a solicitudes
+    </a>
+
+    <div class="detail-card">
+
+        <h1 class="detail-title">@Model.PropertyTitle</h1>
+
+        <div class="info-row">
+            <i class="bi bi-person-fill"></i>
+            <div>
+                <div class="info-label">Nombre del solicitante</div>
+                @Model.ApplicationsName
+            </div>
+        </div>
+
+        <div class="info-row">
+            <i class="bi bi-telephone-fill"></i>
+            <div>
+                <div class="info-label">Teléfono</div>
+                @Model.PhoneNumber
+            </div>
+        </div>
+
+        <div class="info-row">
+            <i class="bi bi-envelope-fill"></i>
+            <div>
+                <div class="info-label">Correo</div>
+                @Model.Email
+            </div>
+        </div>
+
+        <div class="info-row">
+            <i class="bi bi-calendar-event"></i>
+            <div>
+                <div class="info-label">Fecha de solicitud</div>
+                @Model.CreatedAt.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+
+        <div class="message-box">
+            <div class="info-label" style="margin-bottom:8px;">
+                <i class="bi bi-chat-left-text" style="color:#0d5c86;margin-right:8px;"></i>
+                Mensaje
+            </div>
+            @Model.Message
+        </div>
+
+        <div class="status-form">
+            <label>Cambiar estado de la solicitud</label>
+            <form asp-controller="PropertyRequest" asp-action="UpdateStatus" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <select name="status" class="status-select">
+                    @foreach (RequestStatus s in Enum.GetValues(typeof(RequestStatus)))
+                    {
+                        if (s == Model.Status)
+                        {
+                            <option value="@s" selected>@s</option>
+                        }
+                        else
+                        {
+                            <option value="@s">@s</option>
+                        }
+                    }
+                </select>
+                <button type="submit" class="save-btn">
+                    <i class="bi bi-check-circle"></i> Guardar cambio
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
