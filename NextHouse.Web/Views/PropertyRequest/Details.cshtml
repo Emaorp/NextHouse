@@ -1,6 +1,10 @@
-﻿@using NextHouse.Application.UseCases.PropertyRequest.Querys.Get
+﻿@using NextHouse.Application.Contracts.Security
+@using NextHouse.Application.UseCases.Account.Queries.UserHasPermission
+@using NextHouse.Application.UseCases.PropertyRequest.Querys.Get
 @using NextHouse.Domain.Entities.Request
-
+@using NextHouse.Application.Utilites.Mediator
+@using System.Security.Claims
+@inject IMediator Mediator
 @model PropertyRequestResponseDto
 
 @{
@@ -166,29 +170,41 @@
             </div>
             @Model.Message
         </div>
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            @if (await Mediator.Send(new UserHasPermissionQuery
+            {
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                PermissionCode = PermissionCodesCatalog.EDIT_REQUESTS
+            }))
+            {
+                <div class="status-form">
+                    <label>Cambiar estado de la solicitud</label>
+                    <form asp-controller="PropertyRequest" asp-action="UpdateStatus" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <select name="status" class="status-select">
+                            @foreach (RequestStatus s in Enum.GetValues(typeof(RequestStatus)))
+                            {
+                                if (s == Model.Status)
+                                {
+                                    <option value="@s" selected>@s</option>
+                                }
+                                else
+                                {
+                                    <option value="@s">@s</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="save-btn">
+                            <i class="bi bi-check-circle"></i> Guardar cambio
+                        </button>
+                    </form>
+                </div>
+                        
+            }
 
-        <div class="status-form">
-            <label>Cambiar estado de la solicitud</label>
-            <form asp-controller="PropertyRequest" asp-action="UpdateStatus" method="post">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <select name="status" class="status-select">
-                    @foreach (RequestStatus s in Enum.GetValues(typeof(RequestStatus)))
-                    {
-                        if (s == Model.Status)
-                        {
-                            <option value="@s" selected>@s</option>
-                        }
-                        else
-                        {
-                            <option value="@s">@s</option>
-                        }
-                    }
-                </select>
-                <button type="submit" class="save-btn">
-                    <i class="bi bi-check-circle"></i> Guardar cambio
-                </button>
-            </form>
-        </div>
+        }
+        
 
     </div>
 

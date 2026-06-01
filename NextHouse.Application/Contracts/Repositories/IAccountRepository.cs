@@ -1,5 +1,6 @@
 ﻿using NextHouse.Application.UseCases.Account.Commands.Loging;
 using NextHouse.Application.UseCases.Account.Queries.GetAccountUserInfo;
+using NextHouse.Domain.Entities.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,7 @@ namespace NextHouse.Application.Contracts.Repositories
         Task<UserAccountInfoDTO> GetUserInfoAsync(string userId, CancellationToken cancellationToken = default);
 
         Task<bool> UserHasPermissionAsync(string userId, string permissionCode, CancellationToken cancellationToken = default);
+
+        Task<List<Permission>> GetPermissionsAsync(Guid roleid, CancellationToken cancellationToken = default);
     }
 }

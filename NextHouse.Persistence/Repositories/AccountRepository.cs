@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.UseCases.Account.Commands.Loging;
 using NextHouse.Application.UseCases.Account.Queries.GetAccountUserInfo;
+using NextHouse.Domain.Entities.Account;
 using NextHouse.Persistence.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,15 @@ namespace NextHouse.Persistence.Repositories
             _signinManager = signinManager;
             _userManager = userManager;
             _context = context;
+        }
+
+      
+
+        public async Task<List<Permission>> GetPermissionsAsync( Guid roleid, CancellationToken cancellationToken = default)
+        {
+            return await _context.Permissions.Where(p => p.RolePermissions.Any(rp => rp.RoleId == roleid))
+                                             .AsNoTracking()
+                                             .ToListAsync(cancellationToken);
         }
 
         public async Task<UserAccountInfoDTO> GetUserInfoAsync(string userId, CancellationToken cancellationToken = default)

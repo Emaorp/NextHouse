@@ -7,6 +7,7 @@ using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.Account.Queries.GetRoleOptions;
 using NextHouse.Application.UseCases.Account.Queries.UserHasPermission;
 using NextHouse.Application.UseCases.Users.Commands.CreateUser;
+using NextHouse.Application.UseCases.Users.Queries.GetUserById;
 using NextHouse.Application.UseCases.Users.Queries.GetUsersList;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Web.DTOs.Users;
@@ -119,6 +120,34 @@ namespace PrivateBlog.Web.Controllers
 
                 return View(dto);
             }
+        }
+
+        [HttpGet("list")]
+        public async Task<IActionResult> Index()
+        {
+            List<GetUserResponseDTO> users =
+                await _mediator.Send(new GetUserQuery());
+
+            return View(users);
+        }
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> Edit(string id)
+        {
+            GetUserByIdResponseDTO? user =
+                await _mediator.Send(new GetUserByIdQuery
+                {
+                    UserId = id
+                });
+
+            if (user == null)
+            {
+                _notifyService.Error("Usuario no encontrado.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            await LoadRolesSelectListAsync();
+
+            return View(user);
         }
         private async Task LoadRolesSelectListAsync()
         {

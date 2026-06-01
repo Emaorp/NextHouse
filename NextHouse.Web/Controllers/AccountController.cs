@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextHouse.Application.UseCases.Account.Commands.Loging;
 using NextHouse.Application.UseCases.Account.Commands.Logout;
+using NextHouse.Application.UseCases.Roles.Queries.GetRolePermissions;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Web.DTOs.Account;
 
@@ -97,5 +98,23 @@ namespace NextHouse.Web.Controllers
         {
             return View("Forbbiden");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRolePermissions(string roleId)
+        {
+            if (string.IsNullOrWhiteSpace(roleId))
+            {
+                return BadRequest("El rol es requerido.");
+            }
+
+            List<GetRolePermissionsResponseDTO> permissions =
+                await _mediator.Send(new GetRolePermissionsQuery
+                {
+                    RoleId = roleId
+                });
+
+            return Json(permissions);
+        }
+
     }
 }
