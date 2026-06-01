@@ -111,5 +111,23 @@ namespace NextHouse.Persistence.Repositories
                 throw new BussinesRuleException($"Error al actualizar el usuario: {errors}");
             }
         }
+        public async Task<List<User>> GetByRoleAsync(string roleName, CancellationToken cancellationToken = default)
+        {
+            var users = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Role.Name == roleName)
+                .ToListAsync(cancellationToken);
+
+            return users.Select(u => User.Reconstitute(
+                u.Id,
+                u.FirstName,
+                u.LastName,
+                u.UserName,
+                u.Email,
+                u.EmailConfirmed,
+                u.PhoneNumber,
+                u.RoleId
+            )).ToList();
+        }
     }
 }

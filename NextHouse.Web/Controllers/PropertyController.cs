@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NextHouse.Application.Contracts.Repositories;
 using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.City.Queries.GetCities;
 using NextHouse.Application.UseCases.Department.Queries.GetDerpartments;
@@ -9,6 +10,7 @@ using NextHouse.Application.UseCases.Property.Commands.UpdateProperty;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertiesListByFilters;
 using NextHouse.Application.UseCases.Property.Queries.GetPropertyByID;
 using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Persistence.Repositories;
 using NextHouse.Web.DTOs.Properties;
 using NextHouse.Web.Security;
 using System.Security.Claims;
@@ -19,11 +21,13 @@ namespace NextHouse.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUsersRepository _usersRepository;
 
-        public PropertyController(IMediator mediator, IWebHostEnvironment webHostEnvironment)
+        public PropertyController(IMediator mediator, IWebHostEnvironment webHostEnvironment, IUsersRepository usersRepository)
         {
             _mediator = mediator;
             _webHostEnvironment = webHostEnvironment;
+            _usersRepository = usersRepository;
         }
 
         // =========================================
@@ -178,6 +182,16 @@ namespace NextHouse.Web.Controllers
                 {
                     Value = d.Id.ToString(),
                     Text = d.Name
+                })
+                .ToList();
+
+            var agents = await _usersRepository.GetByRoleAsync("Agent");
+
+            ViewBag.Agents = agents
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id,
+                    Text = $"{a.FisrtName} {a.LastName}"
                 })
                 .ToList();
         }

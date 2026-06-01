@@ -27,13 +27,13 @@ namespace NextHouse.Application.UseCases.PropertyRequest.Queries.GetRequestByAge
                     new GetPropertyRequestByAgentIdResponseDTO
                     {
                         Id = x.Id,
-
                         PropertyId = x.PropertyId,
-
                         PropertyTitle = x.Property.Title,
-
+                        ApplicationsName = x.ApplicationsName,
+                        PhoneNumber = x.PhoneNumber,
+                        Email = x.Email,
+                        Message = x.Message,
                         Status = x.Status,
-
                         CreatedAt = x.CreatedAt
                     })
                 .ToList();

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using NextHouse.Domain.Entities.Request;
 
 namespace NextHouse.Application.UseCases.PropertyRequest.Commands.Update
 {
     public class UpdatePropertyRequestDto
     {
-        public string Message { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public RequestStatus Status { get; set; }
     }
 }

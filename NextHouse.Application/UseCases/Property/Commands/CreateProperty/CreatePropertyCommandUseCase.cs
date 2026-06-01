@@ -42,7 +42,8 @@ namespace NextHouse.Application.UseCases.Property.Commands.CreateProperty
                 Type = dto.Type,
                 Status = Domain.Entities.Properties.PropertyStatus.Available,
                 CreatedAt = DateTime.Now,
-                OwnerId = dto.OwnerId
+                OwnerId = dto.OwnerId,
+                AgentId = dto.AgentId
             };
 
             await _propertyRepository.AddAsync(newProperty);

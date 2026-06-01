@@ -5,7 +5,9 @@ using NextHouse.Application.UseCases.PropertyRequest.Commands.Create;
 using NextHouse.Application.UseCases.PropertyRequest.Commands.CreateRequest;
 using NextHouse.Application.UseCases.PropertyRequest.Queries.GetRequestByAgentId;
 using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Domain.Entities.Request;
 using NextHouse.Web.Security;
+using NextHouse.Application.UseCases.PropertyRequest.Querys.Get;
 
 namespace NextHouse.Web.Controllers
 {
@@ -75,6 +77,41 @@ namespace NextHouse.Web.Controllers
                 await _mediator.Send(query);
 
             return View(result);
+        }
+
+        [HttpGet]
+        [RequirePermission(PermissionCodesCatalog.SHOW_REQUESTS)]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var query = new NextHouse.Application.UseCases.PropertyRequest.Querys.Get.GetPropertyRequestQuery
+            {
+                Id = id
+            };
+
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+                return NotFound();
+
+            return View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RequirePermission(PermissionCodesCatalog.SHOW_REQUESTS)]
+        public async Task<IActionResult> UpdateStatus(Guid id, NextHouse.Domain.Entities.Request.RequestStatus status)
+        {
+            var dto = new NextHouse.Application.UseCases.PropertyRequest.Commands.Update.UpdatePropertyRequestDto
+            {
+                Id = id,
+                Status = status
+            };
+
+            var command = new NextHouse.Application.UseCases.PropertyRequest.Commands.Update.UpdatePropertyRequestCommand(dto);
+            await _mediator.Send(command);
+
+            TempData["Success"] = "Estado actualizado correctamente.";
+            return RedirectToAction("Details", new { id });
         }
 
     }

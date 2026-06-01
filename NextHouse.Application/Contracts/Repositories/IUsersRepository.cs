@@ -18,5 +18,7 @@ namespace NextHouse.Application.Contracts.Repositories
         Task DeleteAsync(string id, CancellationToken cancellationToken = default);
 
         Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default);
+
+        Task<List<User>> GetByRoleAsync(string roleName, CancellationToken cancellationToken = default);
     }
 }
