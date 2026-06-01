@@ -37,7 +37,7 @@ namespace NextHouse.Web.Controllers
         // POST: PropertyRequest/Create (MVC form)
         // =========================================
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [RequirePermission(PermissionCodesCatalog.CREATE_REQUESTS)]
         public async Task<IActionResult> Create(CreateRequestDto dto)
         {
             if (!ModelState.IsValid)
@@ -98,7 +98,7 @@ namespace NextHouse.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [RequirePermission(PermissionCodesCatalog.SHOW_REQUESTS)]
+        [RequirePermission(PermissionCodesCatalog.EDIT_REQUESTS)]
         public async Task<IActionResult> UpdateStatus(Guid id, NextHouse.Domain.Entities.Request.RequestStatus status)
         {
             var dto = new NextHouse.Application.UseCases.PropertyRequest.Commands.Update.UpdatePropertyRequestDto

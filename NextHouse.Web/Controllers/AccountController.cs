@@ -1,11 +1,13 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.Account.Commands.Loging;
 using NextHouse.Application.UseCases.Account.Commands.Logout;
 using NextHouse.Application.UseCases.Roles.Queries.GetRolePermissions;
 using NextHouse.Application.Utilites.Mediator;
 using NextHouse.Web.DTOs.Account;
+using NextHouse.Web.Security;
 
 namespace NextHouse.Web.Controllers
 {
@@ -100,6 +102,7 @@ namespace NextHouse.Web.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(PermissionCodesCatalog.ADMIN_ROLES)]
         public async Task<IActionResult> GetRolePermissions(string roleId)
         {
             if (string.IsNullOrWhiteSpace(roleId))

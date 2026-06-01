@@ -1,9 +1,11 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using NextHouse.Application.Contracts.Security;
 using NextHouse.Application.UseCases.Roles.Commands.UpdateRolePermissions;
 using NextHouse.Application.UseCases.Roles.Queries;
 using NextHouse.Application.UseCases.Security.Roles.Commands.UpdateRolePermissions;
 using NextHouse.Application.Utilites.Mediator;
+using NextHouse.Web.Security;
 
 namespace NextHouse.Web.Controllers
 {
@@ -21,6 +23,7 @@ namespace NextHouse.Web.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(PermissionCodesCatalog.ADMIN_ROLES)]
         public async Task<IActionResult> Index()
         {
             List<GetRolesResponseDTO> roles =
@@ -31,6 +34,7 @@ namespace NextHouse.Web.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(PermissionCodesCatalog.ADMIN_ROLES)]
         public async Task<IActionResult> UpdatePermissions(
             [FromBody] UpdateRolePermissionsDTO dto)
         {
