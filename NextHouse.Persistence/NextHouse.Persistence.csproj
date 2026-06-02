@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\NextHouse.Application\NextHouse.Application.csproj" />
     <ProjectReference Include="..\NextHouse.Domain\NextHouse.Domain.csproj" />
+    <ProjectReference Include="..\NextHouse.Tests\NextHouse.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

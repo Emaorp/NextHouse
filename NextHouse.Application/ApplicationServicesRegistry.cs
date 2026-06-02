@@ -1,5 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using NextHouse.Application.UseCases.PropertyRequest.Commands.CreateRequest;
+using NextHouse.Application.UseCases.PropertyRequest.Commands.Update;
+using NextHouse.Application.UseCases.PropertyRequest.Queries.GetRequestByAgentId;
+using NextHouse.Application.UseCases.PropertyRequest.Querys.Get;
 using NextHouse.Application.Utilites.Mediator;
 
 namespace NextHouse.Application
@@ -53,7 +57,10 @@ namespace NextHouse.Application
             //services.AddValidatorsFromAssemblyContaining<DeleteBlogCommandValidator>();
 
             //services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
-
+            services.AddScoped<GetPropertyRequestUseCase>();
+            services.AddScoped<GetPropertyRequestByAgentIdUseCase>();
+            services.AddScoped<CreateRequestCommandUseCase>();
+            services.AddScoped<UpdatePropertyRequestUseCase>();
             return services;
         }
     }
