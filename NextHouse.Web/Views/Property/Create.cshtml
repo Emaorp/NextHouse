@@ -347,7 +347,7 @@
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Agente asignado</label>
                     <select asp-for="AgentId" class="form-select">
-                        <option value="">Sin agente asignado</option>
+                        <option value="">Asignado por el sistema</option>
                         @foreach (SelectListItem agent in ViewBag.Agents)
                         {
                             <option value="@agent.Value">@agent.Text</option>
