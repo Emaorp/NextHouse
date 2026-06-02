@@ -23,7 +23,7 @@ namespace NextHouse.Web.Controllers
         // =========================================
         // POST: api/PropertyRequest (API endpoint)
         // =========================================
-        [HttpPost]
+        /*[HttpPost]
         [Route("api/PropertyRequest")]
 
         public async Task<IActionResult> CreateApi([FromBody] CreateRequestDto dto)
@@ -32,12 +32,10 @@ namespace NextHouse.Web.Controllers
             var id = await _mediator.Send(command);
             return Ok(new { id });
         }
-
-        // =========================================
-        // POST: PropertyRequest/Create (MVC form)
-        // =========================================
+        */
+    
         [HttpPost]
-        [RequirePermission(PermissionCodesCatalog.CREATE_REQUESTS)]
+       // [RequirePermission(PermissionCodesCatalog.CREATE_REQUESTS)]
         public async Task<IActionResult> Create(CreateRequestDto dto)
         {
             if (!ModelState.IsValid)
